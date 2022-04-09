@@ -115,6 +115,38 @@ class Material extends Obj{
     }
 }
 
+class SkyboxMaterial extends Obj{
+    constructor(textureBK, textureDN, textureFT, textureLF, textureRT, textureUP) {
+        super();
+        this.textureBK = textureBK;
+        this.textureDN = textureDN;
+        this.textureFT = textureFT;
+        this.textureLF = textureLF;
+        this.textureRT = textureRT;
+        this.textureUP = textureUP;
+        this.textureLoader = new TextureLoader();
+    }
+
+    getTextureBK(){
+        return this.textureLoader.load(this.textureBK);
+    }
+    getTextureDN(){
+        return this.textureLoader.load(this.textureDN);
+    }
+    getTextureFT(){
+        return this.textureLoader.load(this.textureFT);
+    }
+    getTextureLF(){
+        return this.textureLoader.load(this.textureLF);
+    }
+    getTextureRT(){
+        return this.textureLoader.load(this.textureRT);
+    }
+    getTextureUP(){
+        return this.textureLoader.load(this.textureUP);
+    }
+}
+
 class Wrap extends Obj{
     constructor(material, repA, repB) {
         super();
@@ -126,6 +158,14 @@ class Wrap extends Obj{
         material.wrapS = THREE.RepeatWrapping;
         material.wrapT = THREE.RepeatWrapping;
         material.repeat.set(this.repA, this.repB);
+    }
+}
+
+class SkyboxDay extends SkyboxMaterial{
+    constructor() {
+        super('./textures/Skybox/miramar_bk.jpg','./textures/Skybox/miramar_dn.jpg',
+            './textures/Skybox/miramar_ft.jpg','./textures/Skybox/miramar_lf.jpg',
+            './textures/Skybox/miramar_rt.jpg','./textures/Skybox/miramar_up.jpg');
     }
 }
 
@@ -147,12 +187,12 @@ class Wood extends Material{
 
 class ReflectiveMetal extends Material{
     constructor() {
-        super('./textures/ReflectiveMetal/Metal_Scratched_009_basecolor.jpg',
-            './textures/ReflectiveMetal/Metal_Scratched_009_normal.jpg',
-            './textures/ReflectiveMetal/Metal_Scratched_009_height.png',
-            './textures/ReflectiveMetal/Metal_Scratched_009_roughness.jpg',
-            './textures/ReflectiveMetal/Metal_Scratched_009_ambientOcclusion.jpg',
-            './textures/ReflectiveMetal/Metal_Scratched_009_metallic.jpg');
+        super('./textures/ReflectiveMetal/Metal_scratched_009_basecolor.jpg',
+            './textures/ReflectiveMetal/Metal_scratched_009_normal.jpg',
+            './textures/ReflectiveMetal/Metal_scratched_009_height.png',
+            './textures/ReflectiveMetal/Metal_scratched_009_roughness.jpg',
+            './textures/ReflectiveMetal/Metal_scratched_009_ambientOcclusion.jpg',
+            './textures/ReflectiveMetal/Metal_scratched_009_metallic.jpg');
     }
 }
 
@@ -165,6 +205,29 @@ class Stone extends Material{
     }
 }
 
+class Skybox extends Cube{
+    constructor(size) {
+        super(size);
+        this.texture = new SkyboxDay();
+        this.materialArray = [
+            new THREE.MeshBasicMaterial( { map: this.texture.getTextureBK() }),
+            new THREE.MeshBasicMaterial( { map: this.texture.getTextureFT() }),
+            new THREE.MeshBasicMaterial( { map: this.texture.getTextureUP() }),
+            new THREE.MeshBasicMaterial( { map: this.texture.getTextureDN() }),
+            new THREE.MeshBasicMaterial( { map: this.texture.getTextureRT() }),
+            new THREE.MeshBasicMaterial( { map: this.texture.getTextureLF() })
+        ];
+        for (let i = 0; i < 6; i++) {
+            this.materialArray[i].side = THREE.BackSide;
+        }
+
+        this.mesh = new THREE.Mesh(this.geometry,this.materialArray);
+    }
+    update(){}
+    getMesh(){
+        return this.mesh;
+    }
+}
 
 class Suporte extends Cube {
     constructor(size,position, rotateX, rotateZ, repA, repB) {
@@ -449,10 +512,12 @@ class Application {
 
 let app = new Application();
 let objs = [
-    new Bench({x:-40, y:3, z:80}, 1.58),
-    new Bench({x:0, y:3, z:80}, 1.58),
-    new Bench({x:40, y:3, z:80}, 1.58),
-    new Bench({x:80, y:3, z:80}, 1.58),
+    new Skybox({width:1000, height:1000, depth:1000}),
+    // new Bench({x:-40, y:3, z:80}, 1.58),
+    // new Bench({x:0, y:3, z:80}, 1.58),
+    // new Bench({x:40, y:3, z:80}, 1.58),
+    // new Bench({x:80, y:3, z:80}, 1.58),
     new Jardim(),
 ];
+
 app.add(objs);
