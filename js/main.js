@@ -43,18 +43,52 @@ class Sphere extends Obj{
     }
 }
 
+class Banco extends Model {
+    constructor(position, rotation) {
+        super();
+        this.position = position;
+        this.rotation = rotation;
+    }
+
+    load(scene) {
+        let loader = new GLTFLoader();
+        let alpha = 10;
+        let pos_x = this.position.x;
+        let pos_y = this.position.y;
+        let pos_z = this.position.z;
+        let rot_x = this.rotation.x;
+        let rot_y = this.rotation.y;
+        let rot_z = this.rotation.z;
+
+        loader.load('./models/bench/bench.glb', function (gltf) {
+            scene.add(gltf.scene);
+            gltf.scene.scale.set(alpha*gltf.scene.scale.x, alpha*gltf.scene.scale.y, alpha * gltf.scene.scale.z);
+            gltf.scene.position.set(pos_x,pos_y,pos_z);
+            gltf.scene.rotation.set(rot_x,rot_y,rot_z);
+        }, undefined, function (error) {
+            console.error(error);
+        });
+    }
+    update(){
+    }
+}
+
+
 class Jardim extends Model{
     constructor(position) {
         super();
+        this.position = position;
     }
     load(scene){
         let loader = new GLTFLoader();
         let alpha = 10;
+        let pos_x = this.position.x;
+        let pos_y = this.position.y;
+        let pos_z = this.position.z;
         loader.load( './models/lake/lago.glb', function ( gltf ) {
             scene.add(gltf.scene)
             gltf.scene.scale.set(alpha*gltf.scene.scale.x, alpha*gltf.scene.scale.y, alpha * gltf.scene.scale.z)
-
-
+            gltf.scene.position.set(pos_x,pos_y,pos_z);
         }, undefined, function ( error ) {
             console.error( error );
         } );
@@ -517,7 +551,8 @@ let objs = [
     // new Bench({x:0, y:3, z:80}, 1.58),
     // new Bench({x:40, y:3, z:80}, 1.58),
     // new Bench({x:80, y:3, z:80}, 1.58),
-    new Jardim(),
+    new Jardim({x:0, y:0, z:0}),
+    new Banco({x:10, y:3, z:100},{x:0, y:Math.PI, z:0})
 ];
 
 app.add(objs);
