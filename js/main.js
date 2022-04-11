@@ -61,6 +61,12 @@ class Banco extends Model {
         let rot_z = this.rotation.z;
 
         loader.load('./models/bench/bench.glb', function (gltf) {
+            gltf.scene.traverse(function(child) {
+                if (child.isMesh) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                }
+            })
             scene.add(gltf.scene);
             gltf.scene.scale.set(alpha*gltf.scene.scale.x, alpha*gltf.scene.scale.y, alpha * gltf.scene.scale.z);
             gltf.scene.position.set(pos_x,pos_y,pos_z);
@@ -86,6 +92,12 @@ class Jardim extends Model{
         let pos_y = this.position.y;
         let pos_z = this.position.z;
         loader.load( './models/lake/lago.glb', function ( gltf ) {
+            gltf.scene.traverse(function(child) {
+                if (child.isMesh) {
+                    // child.castShadow = true;
+                    child.receiveShadow = true;
+                }
+            })
             scene.add(gltf.scene)
             gltf.scene.scale.set(alpha*gltf.scene.scale.x, alpha*gltf.scene.scale.y, alpha * gltf.scene.scale.z)
             gltf.scene.position.set(pos_x,pos_y,pos_z);
@@ -494,6 +506,10 @@ class Application {
 
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        this.renderer.physicallyCorrectLights = true;
+        this.renderer.outputEncoding = THREE.sRGBEncoding;
         document.body.appendChild(this.renderer.domElement);
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
         this.scene.background = new THREE.Color( 0x66688d );
@@ -505,10 +521,67 @@ class Application {
         // const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
         // directionalLight.position.set(0,10,0);
         // this.scene.add(directionalLight);
-        this.scene.add( new THREE.AmbientLight( 0x404040, 0.5 ) );
-        const spotLight = new THREE.SpotLight( 0xffffff , 2,0,Math.PI/4);
-        spotLight.position.set( 0, 170, 0 );
-        this.scene.add(spotLight);
+        // this.scene.add( new THREE.AmbientLight( 0x404040, 0.5 ) );
+        // const spotLight = new THREE.SpotLight( 0xffffff , 2,0,Math.PI/4);
+        // spotLight.position.set( 0, 170, 0 );
+        // this.scene.add(spotLight);
+
+
+
+
+        // let light = new THREE.DirectionalLight(0xFFFFFF, 1.0);
+        // light.position.set(20, 100, 10);
+        // light.target.position.set(0, 0, 0);
+        // light.castShadow = true;
+        // this.scene.add(light)
+        // light = new THREE.AmbientLight(0x101010);
+        // this.scene.add(light)
+        let light = new THREE.DirectionalLight(0xFFFFFF, 1.0);
+        light.position.set(20, 100, 10);
+        light.target.position.set(0, 0, 0);
+        light.castShadow = true;
+        light.shadow.bias = -0.001;
+        light.shadow.mapSize.width = 2048;
+        light.shadow.mapSize.height = 2048;
+        light.shadow.camera.near = 0.1;
+        light.shadow.camera.far = 500.0;
+        light.shadow.camera.near = 0.5;
+        light.shadow.camera.far = 500.0;
+        light.shadow.camera.left = 100;
+        light.shadow.camera.right = -100;
+        light.shadow.camera.top = 100;
+        light.shadow.camera.bottom = -100;
+        this.scene.add(light);
+        light = new THREE.AmbientLight(0x101010);
+        this.scene.add(light);
+
+
+        // const distance = 100.0;
+        // const angle = Math.PI / 4.0;
+        // const penumbra = 10;
+        // const decay = 1.0;
+        //
+        // let light = new THREE.SpotLight(
+        //     0xFFFFFF, 100.0, distance, angle, penumbra, decay);
+        // light.castShadow = true;
+        // light.shadow.bias = -0.00001;
+        // light.shadow.mapSize.width = 4096;
+        // light.shadow.mapSize.height = 4096;
+        // light.shadow.camera.near = 1;
+        // light.shadow.camera.far = 100;
+        //
+        // light.position.set(25, 25, 0);
+        // light.lookAt(0, 0, 0);
+        // this.scene.add(light);
+
+
+        // const upColour = 0xFFFF80;
+        // const downColour = 0x808080;
+        // light = new THREE.HemisphereLight(upColour, downColour, 0.5);
+        // light.color.setHSL( 0.6, 1, 0.6 );
+        // light.groundColor.setHSL( 0.095, 1, 0.75 );
+        // light.position.set(0, 4, 0);
+        // this.scene.add(light);
 
     }
 
@@ -552,7 +625,7 @@ let objs = [
     // new Bench({x:40, y:3, z:80}, 1.58),
     // new Bench({x:80, y:3, z:80}, 1.58),
     new Jardim({x:0, y:0, z:0}),
-    new Banco({x:10, y:3, z:100},{x:0, y:Math.PI, z:0})
+    new Banco({x:10, y:2.6, z:100},{x:0, y:Math.PI, z:0})
 ];
 
 app.add(objs);
