@@ -3,7 +3,7 @@ import {RoundedBoxGeometry} from './RoundedBoxGeometry.js';
 import {OrbitControls} from './OrbitControls.js';
 import {GLTFLoader} from './GLTFLoader.js';
 import {Water} from './Water2.js';
-import {TextureLoader} from "./three.module.js";
+import {TextureLoader, Vector2} from "./three.module.js";
 
 
 class Obj {
@@ -52,13 +52,14 @@ class Banco extends Model {
 
     load(scene) {
         let loader = new GLTFLoader();
-        let alpha = 10;
+        let alpha = 9;
         let pos_x = this.position.x;
         let pos_y = this.position.y;
         let pos_z = this.position.z;
         let rot_x = this.rotation.x;
         let rot_y = this.rotation.y;
         let rot_z = this.rotation.z;
+        let model;
 
         loader.load('./models/bench/bench.glb', function (gltf) {
             gltf.scene.traverse(function(child) {
@@ -67,18 +68,61 @@ class Banco extends Model {
                     child.receiveShadow = true;
                 }
             })
-            scene.add(gltf.scene);
-            gltf.scene.scale.set(alpha*gltf.scene.scale.x, alpha*gltf.scene.scale.y, alpha * gltf.scene.scale.z);
-            gltf.scene.position.set(pos_x,pos_y,pos_z);
-            gltf.scene.rotation.set(rot_x,rot_y,rot_z);
+            model = gltf.scene.children[0];
+            scene.add(model);
+            model.scale.set(alpha, alpha, alpha);
+            model.position.set(pos_x,pos_y,pos_z);
+            model.rotation.set(rot_x,rot_y,rot_z);
         }, undefined, function (error) {
             console.error(error);
         });
+
     }
     update(){
     }
+
 }
 
+class TrashBin extends Model {
+    constructor(position, rotation) {
+        super();
+        this.position = position;
+        this.rotation = rotation;
+    }
+
+    load(scene) {
+        let loader = new GLTFLoader();
+        let alpha = 0.08;
+        let pos_x = this.position.x;
+        let pos_y = this.position.y;
+        let pos_z = this.position.z;
+        let rot_x = this.rotation.x;
+        let rot_y = this.rotation.y;
+        let rot_z = this.rotation.z;
+        let model;
+
+        loader.load('./models/trash/trash.glb', function (gltf) {
+            gltf.scene.traverse(function(child) {
+                if (child.isMesh) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                }
+            })
+            const model = gltf.scene.children[0];
+            model.material.metalness = 0
+            scene.add(model);
+            model.scale.set(alpha, alpha, alpha);
+            model.position.set(pos_x,pos_y,pos_z);
+            model.rotation.set(rot_x,rot_y,rot_z);
+        }, undefined, function (error) {
+            console.error(error);
+        });
+
+    }
+    update(){
+    }
+
+}
 
 class Jardim extends Model{
     constructor(position) {
@@ -87,20 +131,29 @@ class Jardim extends Model{
     }
     load(scene){
         let loader = new GLTFLoader();
-        let alpha = 10;
+        let alpha = 200;
+        let grass_alpha = 5;
         let pos_x = this.position.x;
         let pos_y = this.position.y;
         let pos_z = this.position.z;
         loader.load( './models/lake/lago.glb', function ( gltf ) {
             gltf.scene.traverse(function(child) {
                 if (child.isMesh) {
-                    // child.castShadow = true;
                     child.receiveShadow = true;
                 }
             })
-            scene.add(gltf.scene)
-            gltf.scene.scale.set(alpha*gltf.scene.scale.x, alpha*gltf.scene.scale.y, alpha * gltf.scene.scale.z)
-            gltf.scene.position.set(pos_x,pos_y,pos_z);
+            const model = gltf.scene.children[0];
+            model.children[0].material.map.repeat = new Vector2(grass_alpha,grass_alpha)
+            model.children[0].material.metalnessMap.repeat = new Vector2(grass_alpha,grass_alpha)
+            model.children[0].material.normalMap.repeat = new Vector2(grass_alpha,grass_alpha)
+            model.children[0].material.roughnessMap.repeat = new Vector2(grass_alpha,grass_alpha)
+            model.children[1].material.map.repeat = new Vector2(grass_alpha,grass_alpha)
+            model.children[1].material.metalnessMap.repeat = new Vector2(grass_alpha,grass_alpha)
+            model.children[1].material.normalMap.repeat = new Vector2(grass_alpha,grass_alpha)
+            model.children[1].material.roughnessMap.repeat = new Vector2(grass_alpha,grass_alpha)
+            scene.add(model)
+            model.scale.set(alpha, alpha, alpha)
+            model.position.set(pos_x,pos_y,pos_z);
         }, undefined, function ( error ) {
             console.error( error );
         } );
@@ -112,7 +165,7 @@ class Jardim extends Model{
             flowY: 1
         };
 
-        const waterGeometry = new THREE.BoxGeometry( 110,140,1 ); //190,200
+        const waterGeometry = new THREE.BoxGeometry( 140,140,1 ); //190,200
 
         const water = new Water( waterGeometry, {
             color: params.color,
@@ -122,7 +175,7 @@ class Jardim extends Model{
             textureHeight: 1024
         } );
 
-        water.position.set(-6,1,-50)
+        water.position.set(-40,-2,-50)
         water.rotation.x = Math.PI * - 0.5;
         scene.add(water)
     }
@@ -296,6 +349,8 @@ class Suporte extends Cube {
         this.wrapMesh(this.maps, repA, repB);
         this.mesh.rotateX(rotateX);
         this.mesh.rotateZ(rotateZ);
+        this.mesh.castShadow = true;
+        this.mesh.receiveShadow = true;
     }
     update() {}
 
@@ -325,6 +380,8 @@ class WoodBar extends RoundCube {
         this.wrapMesh(this.maps, repA, repB);
         this.mesh.rotateX(rotate);
         this.mesh.rotateZ(rotateZ);
+        this.mesh.castShadow = true;
+        this.mesh.receiveShadow = true;
     }
     update() {}
 
@@ -353,6 +410,8 @@ class Legs extends Cylinder {
         this.mesh = new THREE.Mesh(this.geometry, this.material);
         this.mesh.position.set(position.x, position.y, position.z);
         this.mesh.rotateX(rotateX);
+        this.mesh.castShadow = true;
+        this.mesh.receiveShadow = true;
     }
 
     update() {}
@@ -380,6 +439,8 @@ class Base extends RoundCube{
         this.mesh.position.set(position.x, position.y, position.z);
         this.mesh.rotateX(rotateX);
         this.mesh.rotateZ(rotateZ);
+        this.mesh.castShadow = true;
+        this.mesh.receiveShadow = true;
     }
     update(){}
     wrapMesh(maps, repA, repB) {
@@ -419,6 +480,8 @@ class Screw extends Sphere {
         this.mesh = new THREE.Mesh(this.geometry, this.material);
         this.mesh.position.set(position.x, position.y, position.z);
         this.mesh.rotateX(-Math.PI/2);
+        this.mesh.castShadow = true;
+        this.mesh.receiveShadow = true;
     }
 
     update(){}
@@ -445,37 +508,39 @@ class Bench extends Obj{
             //Tampo
             new WoodBar({ width: 0.5, height: 16, depth: 8 },{x:0,y:8,z:6.7},0,Math.PI/2,2,2),
             //Pernas
-            new Legs({x:5,y:4,z:6.7},1,1,8,64,0,0),
-            new Legs({x:-5,y:4,z:6.7},1,1,8,64,0,0),
+            new Legs({x:5,y:4,z:6.7},1,1,8,16,0,0),
+            new Legs({x:-5,y:4,z:6.7},1,1,8,16,0,0),
             //Suporte
             new Suporte({ width: 0.5, height: 14, depth: 1 },{x:6.2,y:4.5,z:6.7},Math.PI/2,0,1,6),
             new Suporte({ width: 0.5, height: 14, depth: 1 },{x:-6.2,y:4.5,z:6.7},Math.PI/2,0,1,6),
             //Parafusos
-            new Screw({x:6.22,y:5.2,z:0},0.1,64,64,3.1),
-            new Screw({x:6.22,y:5.2,z:1.1},0.1,64,64,3.1),
-            new Screw({x:6.22,y:5.2,z:2.2},0.1,64,64,3.1),
-            new Screw({x:6.22,y:5.2,z:3.3},0.1,64,64,3.1),
+            new Screw({x:6.22,y:5.2,z:0},0.1,16,16,3.1),
+            new Screw({x:6.22,y:5.2,z:1.1},0.1,16,16,3.1),
+            new Screw({x:6.22,y:5.2,z:2.2},0.1,16,16,3.1),
+            new Screw({x:6.22,y:5.2,z:3.3},0.1,16,16,3.1),
 
-            new Screw({x:-6.22,y:5.2,z:0},0.1,64,64,3.1),
-            new Screw({x:-6.22,y:5.2,z:1.1},0.1,64,64,3.1),
-            new Screw({x:-6.22,y:5.2,z:2.2},0.1,64,64,3.1),
-            new Screw({x:-6.22,y:5.2,z:3.3},0.1,64,64,3.1),
+            new Screw({x:-6.22,y:5.2,z:0},0.1,16,16,3.1),
+            new Screw({x:-6.22,y:5.2,z:1.1},0.1,16,16,3.1),
+            new Screw({x:-6.22,y:5.2,z:2.2},0.1,16,16,3.1),
+            new Screw({x:-6.22,y:5.2,z:3.3},0.1,16,16,3.1),
 
-            new Screw({x:6.22,y:5.2,z:10},0.1,64,64,3.1),
-            new Screw({x:6.22,y:5.2,z:11.2},0.1,64,64,3.1),
-            new Screw({x:6.22,y:5.2,z:12.3},0.1,64,64,3.1),
-            new Screw({x:6.22,y:5.2,z:13.4},0.1,64,64,3.1),
+            new Screw({x:6.22,y:5.2,z:10},0.1,16,16,3.1),
+            new Screw({x:6.22,y:5.2,z:11.2},0.1,16,16,3.1),
+            new Screw({x:6.22,y:5.2,z:12.3},0.1,16,16,3.1),
+            new Screw({x:6.22,y:5.2,z:13.4},0.1,16,16,3.1),
 
-            new Screw({x:-6.22,y:5.2,z:10},0.1,64,64,3.1),
-            new Screw({x:-6.22,y:5.2,z:11.2},0.1,64,64,3.1),
-            new Screw({x:-6.22,y:5.2,z:12.3},0.1,64,64,3.1),
-            new Screw({x:-6.22,y:5.2,z:13.4},0.1,64,64,3.1),
+            new Screw({x:-6.22,y:5.2,z:10},0.1,16,16,3.1),
+            new Screw({x:-6.22,y:5.2,z:11.2},0.1,16,16,3.1),
+            new Screw({x:-6.22,y:5.2,z:12.3},0.1,16,16,3.1),
+            new Screw({x:-6.22,y:5.2,z:13.4},0.1,16,16,3.1),
             //Base
             new Base({ width: 0.8, height: 14, depth: 5 }, {x:0,y:0,z:6.7},0,Math.PI/2,1,3),
         ];
         this.addMeshToGroup(this.parts);
         this.mesh.position.set(position.x, position.y, position.z);
         this.mesh.rotateY(rotateX);
+        this.mesh.castShadow = true;
+        this.mesh.receiveShadow = true;
     }
 
     update() {
@@ -504,84 +569,54 @@ class Application {
         this.camera.position.z = 20;
         this.camera.position.y +=25;
 
-        this.renderer = new THREE.WebGLRenderer();
+        this.renderer = new THREE.WebGLRenderer({antialias: true});
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.shadowMap.enabled = true;
         this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         this.renderer.physicallyCorrectLights = true;
         this.renderer.outputEncoding = THREE.sRGBEncoding;
+        this.renderer.setClearColor( 0xcccccc );
         document.body.appendChild(this.renderer.domElement);
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
         this.scene.background = new THREE.Color( 0x66688d );
 
         this.render();
-        // const light = new THREE.PointLight( 0xffffff, 0.5, 0 );
-        // light.position.set( 0, 150, 0 );
-        // this.scene.add( light );
-        // const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
-        // directionalLight.position.set(0,10,0);
-        // this.scene.add(directionalLight);
-        // this.scene.add( new THREE.AmbientLight( 0x404040, 0.5 ) );
-        // const spotLight = new THREE.SpotLight( 0xffffff , 2,0,Math.PI/4);
-        // spotLight.position.set( 0, 170, 0 );
-        // this.scene.add(spotLight);
 
 
+        var hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.6 );
+        hemiLight.position.set( 0, 500, 0 );
+        this.scene.add( hemiLight );
+
+        var dirLight = new THREE.DirectionalLight( 0xffffff, 1 );
+        dirLight.position.set( -1, 0.75, 1 );
+        dirLight.position.multiplyScalar( 50);
+        dirLight.name = "dirlight";
+
+        this.scene.add( dirLight );
+
+        dirLight.castShadow = true;
+        dirLight.shadow.mapSize.width = dirLight.shadow.mapSize.height = 1024*2;
+
+        var d = 300;
+
+        dirLight.shadow.camera.left = -d;
+        dirLight.shadow.camera.right = d;
+        dirLight.shadow.camera.top = d;
+        dirLight.shadow.camera.bottom = -d;
+
+        dirLight.shadow.camera.far = 3500;
+        dirLight.shadow.bias = -0.0001;
+        dirLight.shadow.mapSize.width = 1024*4;
+        dirLight.shadow.mapSize.height = 1024*4;
+
+        const ambientLight = new THREE.AmbientLight( 0xfdffe1, 0.4 );
+        this.scene.add(ambientLight)
 
 
-        // let light = new THREE.DirectionalLight(0xFFFFFF, 1.0);
-        // light.position.set(20, 100, 10);
-        // light.target.position.set(0, 0, 0);
-        // light.castShadow = true;
-        // this.scene.add(light)
-        // light = new THREE.AmbientLight(0x101010);
-        // this.scene.add(light)
-        let light = new THREE.DirectionalLight(0xFFFFFF, 1.0);
-        light.position.set(20, 100, 10);
-        light.target.position.set(0, 0, 0);
-        light.castShadow = true;
-        light.shadow.bias = -0.001;
-        light.shadow.mapSize.width = 2048;
-        light.shadow.mapSize.height = 2048;
-        light.shadow.camera.near = 0.1;
-        light.shadow.camera.far = 500.0;
-        light.shadow.camera.near = 0.5;
-        light.shadow.camera.far = 500.0;
-        light.shadow.camera.left = 100;
-        light.shadow.camera.right = -100;
-        light.shadow.camera.top = 100;
-        light.shadow.camera.bottom = -100;
-        this.scene.add(light);
-        light = new THREE.AmbientLight(0x101010);
-        this.scene.add(light);
+        // const axesHelper = new THREE.AxesHelper( 500 );
+        // this.scene.add( axesHelper );
 
 
-        // const distance = 100.0;
-        // const angle = Math.PI / 4.0;
-        // const penumbra = 10;
-        // const decay = 1.0;
-        //
-        // let light = new THREE.SpotLight(
-        //     0xFFFFFF, 100.0, distance, angle, penumbra, decay);
-        // light.castShadow = true;
-        // light.shadow.bias = -0.00001;
-        // light.shadow.mapSize.width = 4096;
-        // light.shadow.mapSize.height = 4096;
-        // light.shadow.camera.near = 1;
-        // light.shadow.camera.far = 100;
-        //
-        // light.position.set(25, 25, 0);
-        // light.lookAt(0, 0, 0);
-        // this.scene.add(light);
-
-
-        // const upColour = 0xFFFF80;
-        // const downColour = 0x808080;
-        // light = new THREE.HemisphereLight(upColour, downColour, 0.5);
-        // light.color.setHSL( 0.6, 1, 0.6 );
-        // light.groundColor.setHSL( 0.095, 1, 0.75 );
-        // light.position.set(0, 4, 0);
-        // this.scene.add(light);
 
     }
 
@@ -601,8 +636,10 @@ class Application {
     add(mesh) {
         if (Array.isArray(mesh)){
             for(let index in mesh){
-                if ( mesh[index] instanceof Model)
+                if ( mesh[index] instanceof Model){
+                    this.objects.push(mesh[index]);
                     mesh[index].load(this.scene)
+                }
                 else{
                     this.objects.push(mesh[index]);
                     this.scene.add( mesh[index].getMesh() );
@@ -620,12 +657,15 @@ class Application {
 let app = new Application();
 let objs = [
     new Skybox({width:1000, height:1000, depth:1000}),
+    new Jardim({x:0, y:0, z:0}),
+    new Bench({x:0, y:0, z:0}, 1.58),
     // new Bench({x:-40, y:3, z:80}, 1.58),
     // new Bench({x:0, y:3, z:80}, 1.58),
     // new Bench({x:40, y:3, z:80}, 1.58),
     // new Bench({x:80, y:3, z:80}, 1.58),
-    new Jardim({x:0, y:0, z:0}),
-    new Banco({x:10, y:2.6, z:100},{x:0, y:Math.PI, z:0})
+    new Banco({x:-10, y:4, z:0},{x:Math.PI, y:0, z:0}),
+    new TrashBin({x:-5, y:0, z:0},{x:Math.PI/2, y:0, z:0})
+
 ];
 
 app.add(objs);
