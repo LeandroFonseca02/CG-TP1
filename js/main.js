@@ -52,7 +52,7 @@ class Banco extends Model {
 
     load(scene) {
         let loader = new GLTFLoader();
-        let alpha = 9;
+        let alpha = 10;
         let pos_x = this.position.x;
         let pos_y = this.position.y;
         let pos_z = this.position.z;
@@ -70,6 +70,125 @@ class Banco extends Model {
             })
             model = gltf.scene.children[0];
             scene.add(model);
+            model.scale.set(alpha, alpha, alpha);
+            model.position.set(pos_x,pos_y,pos_z);
+            model.rotation.set(rot_x,rot_y,rot_z);
+        }, undefined, function (error) {
+            console.error(error);
+        });
+
+    }
+    update(){
+    }
+
+}
+
+class Lamp extends Model {
+    constructor(position, rotation) {
+        super();
+        this.position = position;
+        this.rotation = rotation;
+    }
+
+    load(scene) {
+        let loader = new GLTFLoader();
+        let alpha = 0.08;
+        let pos_x = this.position.x;
+        let pos_y = this.position.y;
+        let pos_z = this.position.z;
+        let rot_x = this.rotation.x;
+        let rot_y = this.rotation.y;
+        let rot_z = this.rotation.z;
+        let model;
+
+        loader.load('./models/lamp/lamp.glb', function (gltf) {
+            gltf.scene.traverse(function(child) {
+                if (child.isMesh) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                }
+            })
+            const model = gltf.scene.children[0];
+            scene.add(model);
+            model.scale.set(alpha, alpha, alpha);
+            model.position.set(pos_x,pos_y,pos_z);
+            model.rotation.set(rot_x,rot_y,rot_z);
+        }, undefined, function (error) {
+            console.error(error);
+        });
+
+    }
+    update(){
+    }
+
+}
+
+class Tree extends Model {
+    constructor(position, rotation,type) {
+        super();
+        this.position = position;
+        this.rotation = rotation;
+        this.type = type;
+        switch (type) {
+            case 1:
+                this.url = './models/trees/tree1.glb'
+                break;
+            case 2:
+                this.url = './models/trees/tree1-1.glb'
+                break;
+            case 3:
+                this.url = './models/trees/tree1-2.glb'
+                break;
+            case 4:
+                this.url = './models/trees/tree2.glb'
+                break;
+            case 5:
+                this.url = './models/trees/tree2-1.glb'
+                break;
+            case 6:
+                this.url = './models/trees/tree2-2.glb'
+                break;
+            case 7:
+                this.url = './models/trees/tree3.glb'
+                break;
+            case 8:
+                this.url = './models/trees/tree3-1.glb'
+                break;
+            case 9:
+                this.url = './models/trees/tree3-2.glb'
+                break;
+            case 10:
+                this.url = './models/trees/tree4.glb'
+                break;
+            case 11:
+                this.url = './models/trees/tree4-1.glb'
+                break;
+            case 12:
+                this.url = './models/trees/tree4-2.glb'
+                break;
+        }
+    }
+
+    load(scene) {
+        let loader = new GLTFLoader();
+        let alpha = 7;
+        let pos_x = this.position.x;
+        let pos_y = this.position.y;
+        let pos_z = this.position.z;
+        let rot_x = this.rotation.x;
+        let rot_y = this.rotation.y;
+        let rot_z = this.rotation.z;
+
+        loader.load(this.url, function (gltf) {
+            gltf.scene.traverse(function(child) {
+                if (child.isMesh) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                }
+            })
+            const model = gltf.scene;
+            scene.add(model);
+            console.log(model)
             model.scale.set(alpha, alpha, alpha);
             model.position.set(pos_x,pos_y,pos_z);
             model.rotation.set(rot_x,rot_y,rot_z);
@@ -536,8 +655,10 @@ class Bench extends Obj{
             //Base
             new Base({ width: 0.8, height: 14, depth: 5 }, {x:0,y:0,z:6.7},0,Math.PI/2,1,3),
         ];
+        let alpha = 1.2;
         this.addMeshToGroup(this.parts);
         this.mesh.position.set(position.x, position.y, position.z);
+        this.mesh.scale.set(alpha,alpha,alpha)
         this.mesh.rotateY(rotateX);
         this.mesh.castShadow = true;
         this.mesh.receiveShadow = true;
@@ -663,8 +784,10 @@ let objs = [
     // new Bench({x:0, y:3, z:80}, 1.58),
     // new Bench({x:40, y:3, z:80}, 1.58),
     // new Bench({x:80, y:3, z:80}, 1.58),
+    new Tree({x:20, y:0, z:0},{x:0, y:0, z:0},2),
+    new Lamp({x:-30, y:-2.5, z:0},{x:0, y:0, z:0}),
     new Banco({x:-10, y:4, z:0},{x:Math.PI, y:0, z:0}),
-    new TrashBin({x:-5, y:0, z:0},{x:Math.PI/2, y:0, z:0})
+    new TrashBin({x:-25, y:0, z:0},{x:Math.PI/2, y:0, z:0})
 
 ];
 
