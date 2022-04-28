@@ -337,7 +337,7 @@ class Screw extends Sphere {
 }
 
 export class Bench extends Obj{
-    constructor(position, rotateX) {
+    constructor(position, rotation) {
         super();
         this.mesh = new THREE.Group();
         this.parts = [
@@ -384,7 +384,7 @@ export class Bench extends Obj{
         ];
         this.addMeshToGroup(this.parts);
         this.mesh.position.set(position.x, position.y, position.z);
-        this.mesh.rotateY(rotateX);
+        this.mesh.rotation.set(rotation.x,rotation.y,rotation.z);
     }
 
     update() {

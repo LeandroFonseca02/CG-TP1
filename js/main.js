@@ -70,8 +70,8 @@ class Application {
         this.scene.add(ambientLight)
 
 
-        // const axesHelper = new THREE.AxesHelper( 500 );
-        // this.scene.add( axesHelper );
+        const axesHelper = new THREE.AxesHelper( 500 );
+        this.scene.add( axesHelper );
 
 
 
@@ -115,15 +115,48 @@ let app = new Application();
 let objs = [
     new Skybox({width:1000, height:1000, depth:1000}),
     new Jardim({x:0, y:0, z:0}),
-    new Bench({x:0, y:0, z:0}, 1.58),
+    new Bench({x:0, y:0, z:100}, {x:0, y:Math.PI/2, z:0}),
+    new Bench({x:30, y:0, z:100}, {x:0, y:Math.PI/2, z:0}),
+    new Bench({x:60, y:0, z:100}, {x:0, y:Math.PI/2, z:0}),
+    new Bench({x:0, y:0, z:140}, {x:0, y:Math.PI/2, z:0}),
+    new Bench({x:30, y:0, z:140}, {x:0, y:Math.PI/2, z:0}),
+    new Bench({x:60, y:0, z:140}, {x:0, y:Math.PI/2, z:0}),
+    new Lamp({x:20, y:-2.5, z:120},{x:0, y:0, z:0}),
+    new Lamp({x:50, y:-2.5, z:120},{x:0, y:0, z:0}),
     // new Bench({x:-40, y:3, z:80}, 1.58),
     // new Bench({x:0, y:3, z:80}, 1.58),
     // new Bench({x:40, y:3, z:80}, 1.58),
     // new Bench({x:80, y:3, z:80}, 1.58),
-    new Tree({x:20, y:0, z:0},{x:0, y:0, z:0},2),
-    new Lamp({x:-30, y:-2.5, z:0},{x:0, y:0, z:0}),
-    new Banco({x:-10, y:4, z:0},{x:Math.PI, y:0, z:0}),
-    new TrashBin({x:-25, y:0, z:0},{x:Math.PI/2, y:0, z:0})
+    // new Tree({x:30, y:0, z:130},{x:0, y:0, z:0},10),
+    // new Tree({x:20, y:0, z:0},{x:0, y:0, z:0},2),
+
+
+
+    new Banco({x:-20, y:4, z:-5},{x:Math.PI, y:Math.PI-Math.PI/6, z:0}),
+    new Lamp({x:-35, y:-2.5, z:-1},{x:0, y:0, z:0}),
+    new TrashBin({x:-5, y:0, z:-15},{x:Math.PI/2, y:0, z:0}),
+    new Banco({x:40, y:4, z:-63},{x:Math.PI, y:Math.PI-Math.PI/2, z:0}),
+    new Lamp({x:40, y:-2.5, z:-50},{x:0, y:0, z:0}),
+    new TrashBin({x:40, y:0, z:-80},{x:Math.PI/2, y:0, z:0}),
+    new Banco({x:-15, y:4, z:-120},{x:Math.PI, y:2*Math.PI + Math.PI/20, z:0}),
+    new Lamp({x:-30, y:-2.5, z:-125},{x:0, y:0, z:0}),
+    new TrashBin({x:0, y:0, z:-120},{x:Math.PI/2, y:0, z:0}),
+    new Banco({x:-90, y:4, z:-105},{x:Math.PI, y:2*Math.PI - Math.PI/3.8, z:0}),
+    new Lamp({x:-100, y:-2.5, z:-95 },{x:0, y:0, z:0}),
+    new TrashBin({x:-80, y:0, z:-120},{x:Math.PI/2, y:0, z:0}),
+    new Banco({x:-115, y:4, z:-50},{x:Math.PI, y:2*Math.PI - Math.PI/2.6, z:0}),
+    new Lamp({x:-120, y:-2.5, z:-40 },{x:0, y:0, z:0}),
+    new TrashBin({x:-110, y:0, z:-65},{x:Math.PI/2, y:0, z:0}),
+    new Banco({x:-100, y:4, z:20},{x:Math.PI, y:Math.PI+Math.PI/4.7, z:0}),
+    new Lamp({x:-110, y:-2.5, z:10 },{x:0, y:0, z:0}),
+    new TrashBin({x:-85, y:0, z:30},{x:Math.PI/2, y:0, z:0}),
+
+
+
+    new Tree({x:-20, y:0, z:15},{x:0, y:Math.PI/2, z:0},4),
+    new Tree({x:20, y:0, z:5},{x:0, y:Math.PI/2, z:0},10    ),
+    new Tree({x:50, y:0, z:15},{x:0, y:Math.PI/2, z:0},10)
+
 
 ];
 
