@@ -1,7 +1,7 @@
 import * as THREE from './three.module.js';
 import {OrbitControls} from './OrbitControls.js';
 import {Bench, Skybox} from "./Objects.js";
-import {Banco, Jardim, Tree, Lamp, TrashBin, Model } from "./Models.js";
+import {Banco, Jardim, Tree, Lamp, TrashBin, Model, Playground} from "./Models.js";
 
 
 const cubeRendertarget = new THREE.WebGLCubeRenderTarget(128, {
@@ -12,6 +12,7 @@ const cubeRendertarget = new THREE.WebGLCubeRenderTarget(128, {
 })
 
 const cubeCamera = new THREE.CubeCamera(1,10000, cubeRendertarget);
+export const loadingManager = new THREE.LoadingManager();
 
 class Application {
 
@@ -73,7 +74,14 @@ class Application {
         const axesHelper = new THREE.AxesHelper( 500 );
         this.scene.add( axesHelper );
 
-
+        const progressBar = document.getElementById('progress-bar');
+        loadingManager.onProgress = function (url,loaded,total) {
+            progressBar.value = (loaded/total) * 100;
+        }
+        const progressBarContainer = document.querySelector('.progress-bar-container');
+        loadingManager.onLoad = function () {
+            progressBarContainer.style.display = 'none';
+        }
 
     }
 
@@ -123,6 +131,7 @@ let objs = [
     new Bench({x:60, y:0, z:140}, {x:0, y:Math.PI/2, z:0}),
     new Lamp({x:20, y:-2.5, z:120},{x:0, y:0, z:0}),
     new Lamp({x:50, y:-2.5, z:120},{x:0, y:0, z:0}),
+    new Playground({x:-100, y:-0.5, z:120},{x:0, y:Math.PI/2, z:0}),
     // new Bench({x:-40, y:3, z:80}, 1.58),
     // new Bench({x:0, y:3, z:80}, 1.58),
     // new Bench({x:40, y:3, z:80}, 1.58),
@@ -153,7 +162,7 @@ let objs = [
 
 
 
-    new Tree({x:-20, y:0, z:15},{x:0, y:Math.PI/2, z:0},4),
+    new Tree({x:-20, y:0, z:15},{x:0, y:Math.PI/2, z:0},1),
     new Tree({x:20, y:0, z:5},{x:0, y:Math.PI/2, z:0},10    ),
     new Tree({x:50, y:0, z:15},{x:0, y:Math.PI/2, z:0},10)
 

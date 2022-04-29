@@ -2,6 +2,7 @@ import {GLTFLoader} from "./GLTFLoader.js";
 import * as THREE from "./three.module.js";
 import {Water} from "./Water2.js";
 import {Vector2} from "./three.module.js";
+import { loadingManager } from './main.js';
 
 export class Model{
     constructor(){}
@@ -16,7 +17,7 @@ export class Lamp extends Model {
     }
 
     load(scene) {
-        let loader = new GLTFLoader();
+        let loader = new GLTFLoader(loadingManager);
         let alpha = 0.08;
         let pos_x = this.position.x;
         let pos_y = this.position.y;
@@ -35,6 +36,49 @@ export class Lamp extends Model {
             })
             const model = gltf.scene.children[0];
             scene.add(model);
+            model.scale.set(alpha, alpha, alpha);
+            model.position.set(pos_x,pos_y,pos_z);
+            model.rotation.set(rot_x,rot_y,rot_z);
+        }, undefined, function (error) {
+            console.error(error);
+        });
+
+    }
+    update(){
+    }
+
+}
+
+export class Playground extends Model {
+    constructor(position, rotation) {
+        super();
+        this.position = position;
+        this.rotation = rotation;
+    }
+
+    load(scene) {
+        let loader = new GLTFLoader(loadingManager);
+        let alpha = 10;
+        let pos_x = this.position.x;
+        let pos_y = this.position.y;
+        let pos_z = this.position.z;
+        let rot_x = this.rotation.x;
+        let rot_y = this.rotation.y;
+        let rot_z = this.rotation.z;
+        let model;
+
+        loader.load('./models/playground/playground.glb', function (gltf) {
+            gltf.scene.traverse(function(child) {
+                if (child.isMesh) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                }
+            })
+            const model = gltf.scene.children[0];
+            scene.add(model);
+            for (let i = 0; i < 6; i++) {
+                model.children[i].material.metalness = 0.5;
+            }
             model.scale.set(alpha, alpha, alpha);
             model.position.set(pos_x,pos_y,pos_z);
             model.rotation.set(rot_x,rot_y,rot_z);
@@ -95,7 +139,7 @@ export class Tree extends Model {
     }
 
     load(scene) {
-        let loader = new GLTFLoader();
+        let loader = new GLTFLoader(loadingManager);
         let alpha = 7;
         let pos_x = this.position.x;
         let pos_y = this.position.y;
@@ -113,7 +157,6 @@ export class Tree extends Model {
             })
             const model = gltf.scene;
             scene.add(model);
-            console.log(model)
             model.scale.set(alpha, alpha, alpha);
             model.position.set(pos_x,pos_y,pos_z);
             model.rotation.set(rot_x,rot_y,rot_z);
@@ -135,7 +178,7 @@ export class TrashBin extends Model {
     }
 
     load(scene) {
-        let loader = new GLTFLoader();
+        let loader = new GLTFLoader(loadingManager);
         let alpha = 0.08;
         let pos_x = this.position.x;
         let pos_y = this.position.y;
@@ -173,7 +216,7 @@ export class Jardim extends Model{
         this.position = position;
     }
     load(scene){
-        let loader = new GLTFLoader();
+        let loader = new GLTFLoader(loadingManager);
         let alpha = 200;
         let grass_alpha = 5;
         let pos_x = this.position.x;
@@ -234,7 +277,7 @@ export class Banco extends Model {
     }
 
     load(scene) {
-        let loader = new GLTFLoader();
+        let loader = new GLTFLoader(loadingManager);
         let alpha = 10;
         let pos_x = this.position.x;
         let pos_y = this.position.y;
