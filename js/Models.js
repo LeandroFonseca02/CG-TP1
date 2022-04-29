@@ -89,7 +89,7 @@ export class Duck extends Model {
             const audioLoader = new THREE.AudioLoader();
             audioLoader.load( './sounds/duck.mp3', function( buffer ) {
                 sound.setBuffer( buffer );
-                sound.setRefDistance(1);
+                sound.setRefDistance(3);
                 sound.play();
             });
             model.add(sound);
