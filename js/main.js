@@ -1,7 +1,8 @@
 import * as THREE from './three.module.js';
 import {OrbitControls} from './OrbitControls.js';
 import {Bench, Skybox} from "./Objects.js";
-import {Banco, Jardim, Tree, Lamp, TrashBin, Model, Playground} from "./Models.js";
+import {Banco, Jardim, Tree, Lamp, TrashBin, Model, Playground, Duck} from "./Models.js";
+import {FirstPersonCamera} from "./FirstPersonCamera.js";
 
 
 const cubeRendertarget = new THREE.WebGLCubeRenderTarget(128, {
@@ -25,7 +26,8 @@ class Application {
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
         this.camera.position.z = 20;
-        this.camera.position.y +=25;
+        this.camera.position.y +=20;
+        this.clock = new THREE.Clock();
 
         this.renderer = new THREE.WebGLRenderer({antialias: true});
         this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -35,7 +37,7 @@ class Application {
         this.renderer.outputEncoding = THREE.sRGBEncoding;
         this.renderer.setClearColor( 0xcccccc );
         document.body.appendChild(this.renderer.domElement);
-        this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+        // this.controls = new OrbitControls(this.camera, this.renderer.domElement);
         this.scene.background = new THREE.Color( 0x66688d );
 
         this.render();
@@ -70,6 +72,7 @@ class Application {
         const ambientLight = new THREE.AmbientLight( 0xfdffe1, 0.4 );
         this.scene.add(ambientLight)
 
+        this.controls = new FirstPersonCamera(this.camera, this.renderer.domElement);
 
         const axesHelper = new THREE.AxesHelper( 500 );
         this.scene.add( axesHelper );
@@ -88,6 +91,7 @@ class Application {
     render() {
         requestAnimationFrame(() => {
             this.render();
+            this.controls.update( this.clock.getDelta() );
         });
 
         this.objects.forEach((object) => {
@@ -103,7 +107,7 @@ class Application {
             for(let index in mesh){
                 if ( mesh[index] instanceof Model){
                     this.objects.push(mesh[index]);
-                    mesh[index].load(this.scene)
+                    mesh[index].load(this.scene,this.camera)
                 }
                 else{
                     this.objects.push(mesh[index]);
@@ -132,6 +136,7 @@ let objs = [
     new Lamp({x:20, y:-2.5, z:120},{x:0, y:0, z:0}),
     new Lamp({x:50, y:-2.5, z:120},{x:0, y:0, z:0}),
     new Playground({x:-100, y:-0.5, z:120},{x:0, y:Math.PI/2, z:0}),
+    new Duck({x:-30, y:-3, z:-50},{x:0, y:0, z:0}),
     // new Bench({x:-40, y:3, z:80}, 1.58),
     // new Bench({x:0, y:3, z:80}, 1.58),
     // new Bench({x:40, y:3, z:80}, 1.58),

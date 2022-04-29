@@ -16,7 +16,7 @@ export class Lamp extends Model {
         this.rotation = rotation;
     }
 
-    load(scene) {
+    load(scene,camera) {
         let loader = new GLTFLoader(loadingManager);
         let alpha = 0.08;
         let pos_x = this.position.x;
@@ -25,7 +25,6 @@ export class Lamp extends Model {
         let rot_x = this.rotation.x;
         let rot_y = this.rotation.y;
         let rot_z = this.rotation.z;
-        let model;
 
         loader.load('./models/lamp/lamp.glb', function (gltf) {
             gltf.scene.traverse(function(child) {
@@ -49,14 +48,15 @@ export class Lamp extends Model {
 
 }
 
-export class Playground extends Model {
+export class Duck extends Model {
     constructor(position, rotation) {
         super();
         this.position = position;
         this.rotation = rotation;
+        this.offset = 0.01;
     }
 
-    load(scene) {
+    load(scene,camera) {
         let loader = new GLTFLoader(loadingManager);
         let alpha = 10;
         let pos_x = this.position.x;
@@ -66,6 +66,58 @@ export class Playground extends Model {
         let rot_y = this.rotation.y;
         let rot_z = this.rotation.z;
         let model;
+
+        loader.load('./models/duck/duck.glb', function (gltf) {
+            gltf.scene.traverse(function(child) {
+                if (child.isMesh) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                }
+            })
+            model = gltf.scene;
+
+            scene.add(model);
+            model.scale.set(alpha, alpha, alpha);
+            model.position.set(pos_x,pos_y,pos_z);
+            model.rotation.set(rot_x,rot_y,rot_z);
+
+            const listener = new THREE.AudioListener();
+            camera.add( listener );
+
+            const sound = new THREE.PositionalAudio( listener );
+
+            const audioLoader = new THREE.AudioLoader();
+            audioLoader.load( './sounds/duck.mp3', function( buffer ) {
+                sound.setBuffer( buffer );
+                sound.setRefDistance(1);
+                sound.play();
+            });
+            model.add(sound);
+        }, undefined, function (error) {
+            console.error(error);
+        });
+    }
+    update(){
+    }
+
+}
+
+export class Playground extends Model {
+    constructor(position, rotation) {
+        super();
+        this.position = position;
+        this.rotation = rotation;
+    }
+
+    load(scene,camera) {
+        let loader = new GLTFLoader(loadingManager);
+        let alpha = 10;
+        let pos_x = this.position.x;
+        let pos_y = this.position.y;
+        let pos_z = this.position.z;
+        let rot_x = this.rotation.x;
+        let rot_y = this.rotation.y;
+        let rot_z = this.rotation.z;
 
         loader.load('./models/playground/playground.glb', function (gltf) {
             gltf.scene.traverse(function(child) {
@@ -138,7 +190,7 @@ export class Tree extends Model {
         }
     }
 
-    load(scene) {
+    load(scene,camera) {
         let loader = new GLTFLoader(loadingManager);
         let alpha = 7;
         let pos_x = this.position.x;
@@ -177,7 +229,7 @@ export class TrashBin extends Model {
         this.rotation = rotation;
     }
 
-    load(scene) {
+    load(scene,camera) {
         let loader = new GLTFLoader(loadingManager);
         let alpha = 0.08;
         let pos_x = this.position.x;
@@ -186,7 +238,6 @@ export class TrashBin extends Model {
         let rot_x = this.rotation.x;
         let rot_y = this.rotation.y;
         let rot_z = this.rotation.z;
-        let model;
 
         loader.load('./models/trash/trash.glb', function (gltf) {
             gltf.scene.traverse(function(child) {
@@ -215,7 +266,7 @@ export class Jardim extends Model{
         super();
         this.position = position;
     }
-    load(scene){
+    load(scene,camera){
         let loader = new GLTFLoader(loadingManager);
         let alpha = 200;
         let grass_alpha = 5;
@@ -276,7 +327,7 @@ export class Banco extends Model {
         this.rotation = rotation;
     }
 
-    load(scene) {
+    load(scene,camera) {
         let loader = new GLTFLoader(loadingManager);
         let alpha = 10;
         let pos_x = this.position.x;
