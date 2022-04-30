@@ -49,22 +49,19 @@ export class Lamp extends Model {
 }
 
 export class Duck extends Model {
-    constructor(position, rotation) {
+    constructor(position, rotation, haveSound) {
         super();
         this.position = position;
         this.rotation = rotation;
-        this.offset = 0.01;
+        this.haveSound = 0;
+        this.haveSound = haveSound;
+        // this.model =  new THREE.Object3D();
     }
 
-    load(scene,camera) {
+
+    load(scene,camera){
         let loader = new GLTFLoader(loadingManager);
         let alpha = 10;
-        let pos_x = this.position.x;
-        let pos_y = this.position.y;
-        let pos_z = this.position.z;
-        let rot_x = this.rotation.x;
-        let rot_y = this.rotation.y;
-        let rot_z = this.rotation.z;
         let model;
 
         loader.load('./models/duck/duck.glb', function (gltf) {
@@ -78,25 +75,27 @@ export class Duck extends Model {
 
             scene.add(model);
             model.scale.set(alpha, alpha, alpha);
-            model.position.set(pos_x,pos_y,pos_z);
-            model.rotation.set(rot_x,rot_y,rot_z);
-
-            const listener = new THREE.AudioListener();
-            camera.add( listener );
-
-            const sound = new THREE.PositionalAudio( listener );
-
-            const audioLoader = new THREE.AudioLoader();
-            audioLoader.load( './sounds/duck.mp3', function( buffer ) {
-                sound.setBuffer( buffer );
-                sound.setRefDistance(3);
-                sound.play();
-            });
-            model.add(sound);
-        }, undefined, function (error) {
+            model.position.set(this.position.x,this.position.y,this.position.z);
+            model.rotation.set(this.rotation.x,this.rotation.y,this.rotation.z);
+            if(this.haveSound !== 0){
+                const listener = new THREE.AudioListener();
+                camera.add( listener );
+                const sound = new THREE.PositionalAudio( listener );
+                const audioLoader = new THREE.AudioLoader();
+                audioLoader.load( './sounds/duck.mp3', function( buffer ) {
+                    sound.setBuffer( buffer );
+                    sound.setRefDistance(7);
+                    sound.setMaxDistance(0.1);
+                    sound.play(1);
+                    model.add(sound);
+                }.bind(model));
+            }
+        }.bind(this), undefined, function (error) {
             console.error(error);
         });
+
     }
+
     update(){
     }
 

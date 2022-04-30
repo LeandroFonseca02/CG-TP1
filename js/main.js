@@ -73,8 +73,8 @@ class Application {
 
         const ambientLight = new THREE.AmbientLight(0xfdffe1, 0.4);
         this.scene.add(ambientLight)
-        const axesHelper = new THREE.AxesHelper(500);
-        this.scene.add(axesHelper);
+        // const axesHelper = new THREE.AxesHelper(500);
+        // this.scene.add(axesHelper);
 
         const progressBar = document.getElementById('progress-bar');
         loadingManager.onProgress = function (url, loaded, total) {
@@ -138,7 +138,7 @@ let objs = [
     new Lamp({x:20, y:-2.5, z:120},{x:0, y:0, z:0}),
     new Lamp({x:50, y:-2.5, z:120},{x:0, y:0, z:0}),
     new Playground({x:-100, y:-0.5, z:120},{x:0, y:Math.PI/2, z:0}),
-    new Duck({x:-30, y:-3, z:-50},{x:0, y:0, z:0}),
+    new Duck({x:-30, y:-3, z:-50},{x:0, y:0, z:0},1),
     // new Bench({x:-40, y:3, z:80}, 1.58),
     // new Bench({x:0, y:3, z:80}, 1.58),
     // new Bench({x:40, y:3, z:80}, 1.58),
