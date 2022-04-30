@@ -268,7 +268,7 @@ export class Jardim extends Model{
     load(scene,camera){
         let loader = new GLTFLoader(loadingManager);
         let alpha = 200;
-        let grass_alpha = 5;
+        let grass_alpha = 30;
         let pos_x = this.position.x;
         let pos_y = this.position.y;
         let pos_z = this.position.z;
