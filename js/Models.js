@@ -55,7 +55,7 @@ export class Duck extends Model {
         this.rotation = rotation;
         this.haveSound = 0;
         this.haveSound = haveSound;
-        // this.model =  new THREE.Object3D();
+
     }
 
 

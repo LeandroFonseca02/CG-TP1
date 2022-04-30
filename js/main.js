@@ -2,7 +2,6 @@ import * as THREE from './three.module.js';
 import {OrbitControls} from './OrbitControls.js';
 import {Bench, Skybox} from "./Objects.js";
 import {Banco, Jardim, Tree, Lamp, TrashBin, Model, Playground, Duck} from "./Models.js";
-import {PointerLockControls} from "./PointerLockControls.js";
 import {FirstPersonControls} from "./FirstPersonControls.js";
 
 
@@ -29,12 +28,11 @@ class Application {
         this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
         this.camera.position.z = 20;
         this.camera.position.y += 15;
-        this.clock = new THREE.Clock();
 
         this.renderer = new THREE.WebGLRenderer({antialias: true});
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.shadowMap.enabled = true;
-        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        this.renderer.shadowMap.type = THREE.BasicShadowMap;
         this.renderer.physicallyCorrectLights = true;
         this.renderer.outputEncoding = THREE.sRGBEncoding;
         this.renderer.setClearColor(0xcccccc);
@@ -45,12 +43,16 @@ class Application {
         this.render();
 
 
+        // Lights
         var hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.6);
         hemiLight.position.set(0, 500, 0);
         this.scene.add(hemiLight);
 
-        var dirLight = new THREE.DirectionalLight(0xffffff, 1);
-        dirLight.position.set(-1, 0.75, 1);
+        var dirLight = new THREE.DirectionalLight(0xffffff, 2);
+        const helper = new THREE.CameraHelper( dirLight.shadow.camera );
+        this.scene.add( helper );
+        dirLight.position.set(-2.3, 3, 3); //dirLight.position.set(-2.3, 3, 3);
+
         dirLight.position.multiplyScalar(50);
         dirLight.name = "dirlight";
 
@@ -73,9 +75,10 @@ class Application {
 
         const ambientLight = new THREE.AmbientLight(0xfdffe1, 0.4);
         this.scene.add(ambientLight)
-        // const axesHelper = new THREE.AxesHelper(500);
-        // this.scene.add(axesHelper);
+        const axesHelper = new THREE.AxesHelper(500);
+        this.scene.add(axesHelper);
 
+        // Loading Bar
         const progressBar = document.getElementById('progress-bar');
         loadingManager.onProgress = function (url, loaded, total) {
             progressBar.value = (loaded / total) * 100;
@@ -85,9 +88,10 @@ class Application {
             progressBarContainer.style.display = 'none';
         }
 
-        this.controls = new FirstPersonControls(this.camera, this.renderer.domElement);
-        this.scene.add(this.controls.getObject());
-
+        // Controls
+        // this.controls = new FirstPersonControls(this.camera, this.renderer.domElement);
+        // this.scene.add(this.controls.getObject());
+        this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     }
 
     render() {
@@ -138,7 +142,7 @@ let objs = [
     new Lamp({x:20, y:-2.5, z:120},{x:0, y:0, z:0}),
     new Lamp({x:50, y:-2.5, z:120},{x:0, y:0, z:0}),
     new Playground({x:-100, y:-0.5, z:120},{x:0, y:Math.PI/2, z:0}),
-    new Duck({x:-30, y:-3, z:-50},{x:0, y:0, z:0},1),
+    // new Duck({x:-30, y:-3, z:-50},{x:0, y:0, z:0}),
     // new Bench({x:-40, y:3, z:80}, 1.58),
     // new Bench({x:0, y:3, z:80}, 1.58),
     // new Bench({x:40, y:3, z:80}, 1.58),
@@ -169,9 +173,55 @@ let objs = [
 
 
 
-    new Tree({x:-20, y:0, z:15},{x:0, y:Math.PI/2, z:0},1),
-    new Tree({x:20, y:0, z:5},{x:0, y:Math.PI/2, z:0},10    ),
-    new Tree({x:50, y:0, z:15},{x:0, y:Math.PI/2, z:0},10)
+    new Tree({x:110, y:0, z:110},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:180, y:0, z:90},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:50, y:0, z:30},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:0, y:0, z:0},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:180, y:0, z:-180},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:160, y:0, z:-100},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:110, y:0, z:-40},{x:0, y:Math.PI/2, z:0},10),
+
+    // new Tree({x:120, y:0, z:150},{x:0, y:Math.PI/2, z:0},10),
+    // new Tree({x:120, y:0, z:90},{x:0, y:Math.PI/2, z:0},10),
+    // new Tree({x:120, y:0, z:30},{x:0, y:Math.PI/2, z:0},10),
+    // new Tree({x:120, y:0, z:-30},{x:0, y:Math.PI/2, z:0},10),
+    // new Tree({x:120, y:0, z:-90},{x:0, y:Math.PI/2, z:0},10),
+    // new Tree({x:120, y:0, z:-150},{x:0, y:Math.PI/2, z:0},10),
+
+
+    new Tree({x:-160, y:0, z:-180},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:-160, y:0, z:-100},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:-130, y:0, z:-60},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:-130, y:0, z:0},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:-160, y:0, z:180},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:-160, y:0, z:120},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:-160, y:0, z:60},{x:0, y:Math.PI/2, z:0},10),
+
+
+
+    new Tree({x:-120, y:0, z:-150},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:-60, y:0, z:-130},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:0, y:0, z:-180},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:120, y:0, z:-180},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:60, y:0, z:-110},{x:0, y:Math.PI/2, z:0},10),
+
+    new Tree({x:120, y:0, z:180},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:60, y:0, z:180},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:0, y:0, z:180},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:-120, y:0, z:160},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:-60, y:0, z:140},{x:0, y:Math.PI/2, z:0},10),
+
+    new Tree({x:-50, y:0, z:50},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:-180, y:0, z:0},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:180, y:0, z:0},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:110, y:0, z:40},{x:0, y:Math.PI/2, z:0},10),
+
+
+
+
+
+
+
 
 
 ];
