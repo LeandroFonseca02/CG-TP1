@@ -2,7 +2,8 @@ import * as THREE from './three.module.js';
 import {OrbitControls} from './OrbitControls.js';
 import {Bench, Skybox} from "./Objects.js";
 import {Banco, Jardim, Tree, Lamp, TrashBin, Model, Playground, Duck} from "./Models.js";
-import {FirstPersonCamera} from "./FirstPersonCamera.js";
+import {PointerLockControls} from "./PointerLockControls.js";
+import {FirstPersonControls} from "./FirstPersonControls.js";
 
 
 const cubeRendertarget = new THREE.WebGLCubeRenderTarget(128, {
@@ -20,13 +21,14 @@ class Application {
     constructor() {
         this.objects = [];
         this.createScene();
+        this.keys = [];
     }
 
     createScene() {
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
         this.camera.position.z = 20;
-        this.camera.position.y +=20;
+        this.camera.position.y += 15;
         this.clock = new THREE.Clock();
 
         this.renderer = new THREE.WebGLRenderer({antialias: true});
@@ -35,27 +37,27 @@ class Application {
         this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         this.renderer.physicallyCorrectLights = true;
         this.renderer.outputEncoding = THREE.sRGBEncoding;
-        this.renderer.setClearColor( 0xcccccc );
+        this.renderer.setClearColor(0xcccccc);
         document.body.appendChild(this.renderer.domElement);
         // this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-        this.scene.background = new THREE.Color( 0x66688d );
+        this.scene.background = new THREE.Color(0x66688d);
 
         this.render();
 
 
-        var hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.6 );
-        hemiLight.position.set( 0, 500, 0 );
-        this.scene.add( hemiLight );
+        var hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.6);
+        hemiLight.position.set(0, 500, 0);
+        this.scene.add(hemiLight);
 
-        var dirLight = new THREE.DirectionalLight( 0xffffff, 1 );
-        dirLight.position.set( -1, 0.75, 1 );
-        dirLight.position.multiplyScalar( 50);
+        var dirLight = new THREE.DirectionalLight(0xffffff, 1);
+        dirLight.position.set(-1, 0.75, 1);
+        dirLight.position.multiplyScalar(50);
         dirLight.name = "dirlight";
 
-        this.scene.add( dirLight );
+        this.scene.add(dirLight);
 
         dirLight.castShadow = true;
-        dirLight.shadow.mapSize.width = dirLight.shadow.mapSize.height = 1024*2;
+        dirLight.shadow.mapSize.width = dirLight.shadow.mapSize.height = 1024 * 2;
 
         var d = 300;
 
@@ -66,32 +68,32 @@ class Application {
 
         dirLight.shadow.camera.far = 3500;
         dirLight.shadow.bias = -0.0001;
-        dirLight.shadow.mapSize.width = 1024*4;
-        dirLight.shadow.mapSize.height = 1024*4;
+        dirLight.shadow.mapSize.width = 1024 * 4;
+        dirLight.shadow.mapSize.height = 1024 * 4;
 
-        const ambientLight = new THREE.AmbientLight( 0xfdffe1, 0.4 );
+        const ambientLight = new THREE.AmbientLight(0xfdffe1, 0.4);
         this.scene.add(ambientLight)
-
-        this.controls = new FirstPersonCamera(this.camera, this.renderer.domElement);
-
-        const axesHelper = new THREE.AxesHelper( 500 );
-        this.scene.add( axesHelper );
+        const axesHelper = new THREE.AxesHelper(500);
+        this.scene.add(axesHelper);
 
         const progressBar = document.getElementById('progress-bar');
-        loadingManager.onProgress = function (url,loaded,total) {
-            progressBar.value = (loaded/total) * 100;
+        loadingManager.onProgress = function (url, loaded, total) {
+            progressBar.value = (loaded / total) * 100;
         }
         const progressBarContainer = document.querySelector('.progress-bar-container');
         loadingManager.onLoad = function () {
             progressBarContainer.style.display = 'none';
         }
 
+        this.controls = new FirstPersonControls(this.camera, this.renderer.domElement);
+        this.scene.add(this.controls.getObject());
+
     }
 
     render() {
         requestAnimationFrame(() => {
+            this.controls.update();
             this.render();
-            this.controls.update( this.clock.getDelta() );
         });
 
         this.objects.forEach((object) => {
