@@ -3,15 +3,6 @@ import {RoundedBoxGeometry} from "./RoundedBoxGeometry.js";
 import {MeshStandardMaterial, TextureLoader} from "./three.module.js";
 
 
-// const cubeRendertarget = new THREE.WebGLCubeRenderTarget(128, {
-//     format: THREE.RGBAFormat,
-//     generateMipmaps: true,
-//     minFilter: THREE.LinearMipmapLinearFilter,
-//     encoding: THREE.sRGBEncoding
-// })
-//
-// const cubeCamera = new THREE.CubeCamera(1,10000, cubeRendertarget);
-
 class Obj {
     constructor(){}
 }
@@ -190,24 +181,30 @@ export class Skybox extends Cube{
 }
 
 class Suporte extends Cube {
-    constructor(size,position, rotateX, rotateZ, repA, repB) {
+    constructor(size,position, rotateX, rotateZ, repA, repB, material) {
         super(size);
-        this.texture = new RustyMetal();
-        this.maps = [
-            this.texture.getBaseTexture(),
-            this.texture.getNormalTexture(),
-            this.texture.getRoughnessTexture(),
-            this.texture.getAoTexture()
-        ];
-        this.material = new THREE.MeshStandardMaterial({
-            map: this.maps[0],
-            normalMap: this.maps[1],
-            roughnessMap: this.maps[2],
-            aoMap: this.maps[3]
-        });
+
+        if(material instanceof MeshStandardMaterial){
+            this.material = material;
+        }else{
+            let texture = new RustyMetal();
+            let maps = [
+                texture.getBaseTexture(),
+                texture.getNormalTexture(),
+                texture.getRoughnessTexture(),
+                texture.getAoTexture()
+            ];
+            this.material = new THREE.MeshStandardMaterial({
+                map: maps[0],
+                normalMap: maps[1],
+                roughnessMap: maps[2],
+                aoMap: maps[3]
+            });
+            this.wrapMesh(maps, repA, repB);
+        }
+
         this.mesh = new THREE.Mesh(this.geometry, this.material);
         this.mesh.position.set(position.x, position.y, position.z);
-        this.wrapMesh(this.maps, repA, repB);
         this.mesh.rotateX(rotateX);
         this.mesh.rotateZ(rotateZ);
         this.mesh.castShadow = true;
@@ -225,24 +222,29 @@ class Suporte extends Cube {
 }
 
 class WoodBar extends RoundCube {
-    constructor(size,position, rotate, rotateZ, repA, repB) {
+    constructor(size,position, rotate, rotateZ, repA, repB, material) {
         super(size);
-        this.texture = new Wood();
-        this.maps = [
-            this.texture.getBaseTexture(),
-            this.texture.getAoTexture(),
-            this.texture.getRoughnessTexture(),
-        ];
-        this.material = new THREE.MeshStandardMaterial({
-            map: this.maps[0],
-            aoMap: this.maps[1],
-            roughnessMap: this.maps[2],
-            roughness:0.7
 
-        });
+        if(material instanceof MeshStandardMaterial){
+            this.material = material;
+        }else{
+            let texture = new Wood();
+            let maps = [
+                texture.getBaseTexture(),
+                texture.getAoTexture(),
+                texture.getRoughnessTexture(),
+            ];
+            this.material = new THREE.MeshStandardMaterial({
+                    map: maps[0],
+                    aoMap: maps[1],
+                    roughnessMap: maps[2],
+                    roughness:0.7
+            });
+            this.wrapMesh(maps, repA, repB);
+        }
+
         this.mesh = new THREE.Mesh(this.geometry, this.material);
         this.mesh.position.set(position.x, position.y, position.z);
-        this.wrapMesh(this.maps, repA, repB);
         this.mesh.rotateX(rotate);
         this.mesh.rotateZ(rotateZ);
         this.mesh.castShadow = true;
@@ -262,16 +264,22 @@ class WoodBar extends RoundCube {
 }
 
 class Legs extends Cylinder {
-    constructor(position, radiusTop, radiusBottom, height, RadialS, rotateX, rotateY) {
+    constructor(position, radiusTop, radiusBottom, height, RadialS, rotateX, rotateY, material) {
         super(radiusTop, radiusBottom, height, RadialS);
-        this.texture = new RustyMetal();
-        this.material = new THREE.MeshStandardMaterial({
-            map: this.texture.getBaseTexture(),
-            normalMap: this.texture.getNormalTexture(),
-            roughnessMap: this.texture.getRoughnessTexture(),
-            roughness: 0.7,
-            aoMap: this.texture.getAoTexture()
-        });
+
+        if(material instanceof MeshStandardMaterial){
+            this.material = material;
+        }else{
+            let texture = new RustyMetal();
+            this.material = new THREE.MeshStandardMaterial({
+                map: texture.getBaseTexture(),
+                normalMap: texture.getNormalTexture(),
+                roughnessMap: texture.getRoughnessTexture(),
+                roughness: 0.7,
+                aoMap: texture.getAoTexture()
+            });
+        }
+
         this.mesh = new THREE.Mesh(this.geometry, this.material);
         this.mesh.position.set(position.x, position.y, position.z);
         this.mesh.rotateX(rotateX);
@@ -280,27 +288,33 @@ class Legs extends Cylinder {
     }
 
     update() {}
-    getMesh() { return this.mesh; }
-}
+    getMesh() {
+        return this.mesh;
+    }}
 
 class Base extends RoundCube{
-    constructor(size,position, rotateX, rotateZ, repA, repB) {
+    constructor(size,position, rotateX, rotateZ, repA, repB, material) {
         super(size);
-        this.texture = new Stone();
-        this.maps = [
-            this.texture.getBaseTexture(),
-            this.texture.getNormalTexture(),
-            this.texture.getHeightTexture(),
-            this.texture.getRoughnessTexture(),
-        ];
-        this.material = new THREE.MeshStandardMaterial({
-            map: this.maps[0],
-            normalMap: this.maps[1],
-            roughnessMap: this.maps[3],
-            roughness:1
-        });
+
+        if(material instanceof MeshStandardMaterial){
+            this.material = material;
+        }else{
+            let texture = new Stone();
+            let maps = [
+                texture.getBaseTexture(),
+                texture.getNormalTexture(),
+                texture.getRoughnessTexture(),
+            ];
+            this.material = new THREE.MeshStandardMaterial({
+                map: maps[0],
+                normalMap: maps[1],
+                roughnessMap: maps[2],
+                roughness:1
+            });
+            this.wrapMesh(maps, repA, repB);
+        }
+
         this.mesh = new THREE.Mesh(this.geometry, this.material);
-        this.wrapMesh(this.maps, repA, repB);
         this.mesh.position.set(position.x, position.y, position.z);
         this.mesh.rotateX(rotateX);
         this.mesh.rotateZ(rotateZ);
@@ -319,12 +333,12 @@ class Base extends RoundCube{
 }
 
 class Screw extends Sphere {
-    constructor(material,position, radius, widthSegments, heightSegments, theta) {
+    constructor(position, radius, widthSegments, heightSegments, theta, material) {
         super(radius, widthSegments, heightSegments, theta);
-        this.material = material;
 
-        if(!this.material instanceof MeshStandardMaterial){
-            // console.log("here")
+        if(material instanceof MeshStandardMaterial){
+            this.material = material;
+        }else{
             let texture = new ReflectiveMetal();
             this.material = new THREE.MeshStandardMaterial({
                 map: texture.getBaseTexture(),
@@ -353,48 +367,53 @@ export class Bench extends Obj{
     constructor(position, rotation) {
         super();
         this.mesh = new THREE.Group();
-        this.RM_material = this.createReflectiveMetalMat()
+        this.RM_material = this.createReflectiveMetalMat();
+        this.Stone_material = this.createStoneMat();
+        this.Wood_material = this.createWoodMat(1,6);
+        this.WoodBase_material = this.createWoodMat(2,2);
+        this.RustyMetal_material = this.createRustyMetalMat();
+        this.Suporte_material = this.createSuporteMat();
         this.parts = [
             //Banco
-            new WoodBar({ width: 0.5, height: 16, depth: 1 },{x:0,y:5,z:0},0,Math.PI/2,1,6),
-            new WoodBar({ width: 0.5, height: 16, depth: 1 },{x:0,y:5,z:1.1},0,Math.PI/2,1,6),
-            new WoodBar({ width: 0.5, height: 16, depth: 1 },{x:0,y:5,z:2.2},0,Math.PI/2,1,6),
-            new WoodBar({ width: 0.5, height: 16, depth: 1 },{x:0,y:5,z:3.3},0,Math.PI/2,1,6),
+            new WoodBar({ width: 0.5, height: 16, depth: 1 },{x:0,y:5,z:0},0,Math.PI/2,1,6,this.Wood_material),
+            new WoodBar({ width: 0.5, height: 16, depth: 1 },{x:0,y:5,z:1.1},0,Math.PI/2,1,6,this.Wood_material),
+            new WoodBar({ width: 0.5, height: 16, depth: 1 },{x:0,y:5,z:2.2},0,Math.PI/2,1,6,this.Wood_material),
+            new WoodBar({ width: 0.5, height: 16, depth: 1 },{x:0,y:5,z:3.3},0,Math.PI/2,1,6,this.Wood_material),
             //Banco
-            new WoodBar({ width: 0.5, height: 16, depth: 1 },{x:0,y:5,z:10.1},0,Math.PI/2,1,6),
-            new WoodBar({ width: 0.5, height: 16, depth: 1 },{x:0,y:5,z:11.2},0,Math.PI/2,1,6),
-            new WoodBar({ width: 0.5, height: 16, depth: 1 },{x:0,y:5,z:12.3},0,Math.PI/2,1,6),
-            new WoodBar({ width: 0.5, height: 16, depth: 1 },{x:0,y:5,z:13.4},0,Math.PI/2,1,6),
+            new WoodBar({ width: 0.5, height: 16, depth: 1 },{x:0,y:5,z:10.1},0,Math.PI/2,1,6,this.Wood_material),
+            new WoodBar({ width: 0.5, height: 16, depth: 1 },{x:0,y:5,z:11.2},0,Math.PI/2,1,6,this.Wood_material),
+            new WoodBar({ width: 0.5, height: 16, depth: 1 },{x:0,y:5,z:12.3},0,Math.PI/2,1,6,this.Wood_material),
+            new WoodBar({ width: 0.5, height: 16, depth: 1 },{x:0,y:5,z:13.4},0,Math.PI/2,1,6,this.Wood_material),
             //Tampo
-            new WoodBar({ width: 0.5, height: 16, depth: 8 },{x:0,y:8,z:6.7},0,Math.PI/2,2,2),
+            new WoodBar({ width: 0.5, height: 16, depth: 8 },{x:0,y:8,z:6.7},0,Math.PI/2,2,2,this.WoodBase_material),
             //Pernas
-            new Legs({x:5,y:4,z:6.7},1,1,8,16,0,0),
-            new Legs({x:-5,y:4,z:6.7},1,1,8,16,0,0),
+            new Legs({x:5,y:4,z:6.7},1,1,8,16,0,0,this.RustyMetal_material),
+            new Legs({x:-5,y:4,z:6.7},1,1,8,16,0,0,this.RustyMetal_material),
             //Suporte
-            new Suporte({ width: 0.5, height: 14, depth: 1 },{x:6.2,y:4.5,z:6.7},Math.PI/2,0,1,6),
-            new Suporte({ width: 0.5, height: 14, depth: 1 },{x:-6.2,y:4.5,z:6.7},Math.PI/2,0,1,6),
+            new Suporte({ width: 0.5, height: 14, depth: 1 },{x:6.2,y:4.5,z:6.7},Math.PI/2,0,1,6,this.Suporte_material),
+            new Suporte({ width: 0.5, height: 14, depth: 1 },{x:-6.2,y:4.5,z:6.7},Math.PI/2,0,1,6,this.Suporte_material),
             //Parafusos
-            new Screw(this.RM_material,{x:6.22,y:5.2,z:0},0.1,16,16,3.1),
-            new Screw(this.RM_material,{x:6.22,y:5.2,z:1.1},0.1,16,16,3.1),
-            new Screw(this.RM_material,{x:6.22,y:5.2,z:2.2},0.1,16,16,3.1),
-            new Screw(this.RM_material,{x:6.22,y:5.2,z:3.3},0.1,16,16,3.1),
+            new Screw({x:6.22,y:5.2,z:0},0.1,16,16,3.1,this.RM_material),
+            new Screw({x:6.22,y:5.2,z:1.1},0.1,16,16,3.1,this.RM_material),
+            new Screw({x:6.22,y:5.2,z:2.2},0.1,16,16,3.1,this.RM_material),
+            new Screw({x:6.22,y:5.2,z:3.3},0.1,16,16,3.1,this.RM_material),
 
-            new Screw(this.RM_material,{x:-6.22,y:5.2,z:0},0.1,16,16,3.1),
-            new Screw(this.RM_material,{x:-6.22,y:5.2,z:1.1},0.1,16,16,3.1),
-            new Screw(this.RM_material,{x:-6.22,y:5.2,z:2.2},0.1,16,16,3.1),
-            new Screw(this.RM_material,{x:-6.22,y:5.2,z:3.3},0.1,16,16,3.1),
+            new Screw({x:-6.22,y:5.2,z:0},0.1,16,16,3.1,this.RM_material),
+            new Screw({x:-6.22,y:5.2,z:1.1},0.1,16,16,3.1,this.RM_material),
+            new Screw({x:-6.22,y:5.2,z:2.2},0.1,16,16,3.1,this.RM_material),
+            new Screw({x:-6.22,y:5.2,z:3.3},0.1,16,16,3.1,this.RM_material),
 
-            new Screw(this.RM_material,{x:6.22,y:5.2,z:10},0.1,16,16,3.1),
-            new Screw(this.RM_material,{x:6.22,y:5.2,z:11.2},0.1,16,16,3.1),
-            new Screw(this.RM_material,{x:6.22,y:5.2,z:12.3},0.1,16,16,3.1),
-            new Screw(this.RM_material,{x:6.22,y:5.2,z:13.4},0.1,16,16,3.1),
+            new Screw({x:6.22,y:5.2,z:10},0.1,16,16,3.1,this.RM_material),
+            new Screw({x:6.22,y:5.2,z:11.2},0.1,16,16,3.1,this.RM_material),
+            new Screw({x:6.22,y:5.2,z:12.3},0.1,16,16,3.1,this.RM_material),
+            new Screw({x:6.22,y:5.2,z:13.4},0.1,16,16,3.1,this.RM_material),
 
-            new Screw(this.RM_material,{x:-6.22,y:5.2,z:10},0.1,16,16,3.1),
-            new Screw(this.RM_material,{x:-6.22,y:5.2,z:11.2},0.1,16,16,3.1),
-            new Screw(this.RM_material,{x:-6.22,y:5.2,z:12.3},0.1,16,16,3.1),
-            new Screw(this.RM_material,{x:-6.22,y:5.2,z:13.4},0.1,16,16,3.1),
+            new Screw({x:-6.22,y:5.2,z:10},0.1,16,16,3.1,this.RM_material),
+            new Screw({x:-6.22,y:5.2,z:11.2},0.1,16,16,3.1,this.RM_material),
+            new Screw({x:-6.22,y:5.2,z:12.3},0.1,16,16,3.1,this.RM_material),
+            new Screw({x:-6.22,y:5.2,z:13.4},0.1,16,16,3.1,this.RM_material),
             //Base
-            new Base({ width: 0.8, height: 14, depth: 5 }, {x:0,y:0,z:6.7},0,Math.PI/2,1,3),
+            new Base({ width: 0.8, height: 14, depth: 5 }, {x:0,y:0,z:6.7},0,Math.PI/2,1,3, this.Stone_material),
         ];
         this.addMeshToGroup(this.parts);
         this.mesh.position.set(position.x, position.y, position.z);
@@ -406,18 +425,91 @@ export class Bench extends Obj{
     }
 
     createReflectiveMetalMat(){
-        let ReflectMetalTexture = new ReflectiveMetal();
-        let RM_material = new THREE.MeshStandardMaterial({
-            map: ReflectMetalTexture.getBaseTexture(),
-            normalMap: ReflectMetalTexture.getNormalTexture(),
-            displacementMap: ReflectMetalTexture.getHeightTexture(),
-            roughnessMap: ReflectMetalTexture.getRoughnessTexture(),
+        let texture = new ReflectiveMetal();
+        let material = new THREE.MeshStandardMaterial({
+            map: texture.getBaseTexture(),
+            normalMap: texture.getNormalTexture(),
+            displacementMap: texture.getHeightTexture(),
+            roughnessMap: texture.getRoughnessTexture(),
             roughness: 1,
-            aoMap: ReflectMetalTexture.getAoTexture(),
-            metalnessMap: ReflectMetalTexture.getMetallicTexture(),
+            aoMap: texture.getAoTexture(),
+            metalnessMap: texture.getMetallicTexture(),
             metalness:1,
         });
-        return RM_material;
+        return material;
+    }
+
+    createRustyMetalMat(){
+        let texture = new RustyMetal();
+        let material = new THREE.MeshStandardMaterial({
+            map: texture.getBaseTexture(),
+            normalMap: texture.getNormalTexture(),
+            roughnessMap: texture.getRoughnessTexture(),
+            roughness: 0.7,
+            aoMap: texture.getAoTexture()
+        });
+        return material;
+    }
+
+    createSuporteMat(){
+        let texture = new RustyMetal();
+        let maps = [
+            texture.getBaseTexture(),
+            texture.getNormalTexture(),
+            texture.getRoughnessTexture(),
+            texture.getAoTexture()
+        ];
+        let material = new THREE.MeshStandardMaterial({
+            map: maps[0],
+            normalMap: maps[1],
+            roughnessMap: maps[2],
+            aoMap: maps[3]
+        });
+
+        for (let i = 0; i < maps.length; i++) {
+            new Wrap(maps[i], 1, 6);
+        }
+        return material;
+    }
+
+    createStoneMat(){
+        let texture = new Stone();
+        let maps = [
+            texture.getBaseTexture(),
+            texture.getNormalTexture(),
+            texture.getRoughnessTexture(),
+        ];
+        let material = new THREE.MeshStandardMaterial({
+            map: maps[0],
+            normalMap: maps[1],
+            roughnessMap: maps[2],
+            roughness:1
+        });
+
+        for (let i = 0; i < maps.length; i++) {
+            new Wrap(maps[i], 1, 3);
+        }
+        return material;
+    }
+
+    createWoodMat(repA,repB){
+        let texture = new Wood();
+        let maps = [
+            texture.getBaseTexture(),
+            texture.getAoTexture(),
+            texture.getRoughnessTexture(),
+        ];
+        let material = new THREE.MeshStandardMaterial({
+            map: maps[0],
+            aoMap: maps[1],
+            roughnessMap: maps[2],
+            roughness:0.7
+        });
+
+        for (let i = 0; i < maps.length; i++) {
+            new Wrap(maps[i], repA, repB);
+        }
+        return material;
     }
 
     addMeshToGroup(parts){

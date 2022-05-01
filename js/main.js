@@ -6,14 +6,6 @@ import {FirstPersonControls} from "./FirstPersonControls.js";
 import Stats from "./stats.module.js";
 
 
-// const cubeRendertarget = new THREE.WebGLCubeRenderTarget(128, {
-//     format: THREE.RGBAFormat,
-//     generateMipmaps: true,
-//     minFilter: THREE.LinearMipmapLinearFilter,
-//     encoding: THREE.sRGBEncoding
-// })
-//
-// const cubeCamera = new THREE.CubeCamera(1,10000, cubeRendertarget);
 export const loadingManager = new THREE.LoadingManager();
 
 class Application {
@@ -106,11 +98,10 @@ class Application {
             this.render();
         });
 
-        // this.objects.forEach((object) => {
-        //     object.update();
-        // });
+        this.objects.forEach((object) => {
+            object.update();
+        });
 
-        // cubeCamera.update(this.renderer, this.scene);
         this.renderer.render(this.scene, this.camera);
     }
 
