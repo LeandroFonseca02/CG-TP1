@@ -3,16 +3,17 @@ import {OrbitControls} from './OrbitControls.js';
 import {Bench, Skybox} from "./Objects.js";
 import {Banco, Jardim, Tree, Lamp, TrashBin, Model, Playground, Duck} from "./Models.js";
 import {FirstPersonControls} from "./FirstPersonControls.js";
+import Stats from "./stats.module.js";
 
 
-const cubeRendertarget = new THREE.WebGLCubeRenderTarget(128, {
-    format: THREE.RGBAFormat,
-    generateMipmaps: true,
-    minFilter: THREE.LinearMipmapLinearFilter,
-    encoding: THREE.sRGBEncoding
-})
-
-const cubeCamera = new THREE.CubeCamera(1,10000, cubeRendertarget);
+// const cubeRendertarget = new THREE.WebGLCubeRenderTarget(128, {
+//     format: THREE.RGBAFormat,
+//     generateMipmaps: true,
+//     minFilter: THREE.LinearMipmapLinearFilter,
+//     encoding: THREE.sRGBEncoding
+// })
+//
+// const cubeCamera = new THREE.CubeCamera(1,10000, cubeRendertarget);
 export const loadingManager = new THREE.LoadingManager();
 
 class Application {
@@ -32,7 +33,7 @@ class Application {
         this.renderer = new THREE.WebGLRenderer({antialias: true});
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.shadowMap.enabled = true;
-        this.renderer.shadowMap.type = THREE.BasicShadowMap;
+        this.renderer.shadowMap.type = THREE.VSMShadowMap;
         this.renderer.physicallyCorrectLights = true;
         this.renderer.outputEncoding = THREE.sRGBEncoding;
         this.renderer.setClearColor(0xcccccc);
@@ -49,8 +50,8 @@ class Application {
         this.scene.add(hemiLight);
 
         var dirLight = new THREE.DirectionalLight(0xffffff, 2);
-        const helper = new THREE.CameraHelper( dirLight.shadow.camera );
-        this.scene.add( helper );
+        // const helper = new THREE.CameraHelper( dirLight.shadow.camera );
+        // this.scene.add( helper );
         dirLight.position.set(-2.3, 3, 3); //dirLight.position.set(-2.3, 3, 3);
 
         dirLight.position.multiplyScalar(50);
@@ -61,7 +62,7 @@ class Application {
         dirLight.castShadow = true;
         dirLight.shadow.mapSize.width = dirLight.shadow.mapSize.height = 1024 * 2;
 
-        var d = 300;
+        var d = 350;
 
         dirLight.shadow.camera.left = -d;
         dirLight.shadow.camera.right = d;
@@ -75,8 +76,8 @@ class Application {
 
         const ambientLight = new THREE.AmbientLight(0xfdffe1, 0.4);
         this.scene.add(ambientLight)
-        const axesHelper = new THREE.AxesHelper(500);
-        this.scene.add(axesHelper);
+        // const axesHelper = new THREE.AxesHelper(500);
+        // this.scene.add(axesHelper);
 
         // Loading Bar
         const progressBar = document.getElementById('progress-bar');
@@ -88,23 +89,28 @@ class Application {
             progressBarContainer.style.display = 'none';
         }
 
+        // Stats
+        this.stats = Stats()
+        document.body.appendChild(this.stats.dom)
+
         // Controls
-        // this.controls = new FirstPersonControls(this.camera, this.renderer.domElement);
-        // this.scene.add(this.controls.getObject());
-        this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+        this.controls = new FirstPersonControls(this.camera, this.renderer.domElement);
+        this.scene.add(this.controls.getObject());
+        // this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     }
 
     render() {
         requestAnimationFrame(() => {
             this.controls.update();
+            this.stats.update();
             this.render();
         });
 
-        this.objects.forEach((object) => {
-            object.update();
-        });
+        // this.objects.forEach((object) => {
+        //     object.update();
+        // });
 
-        cubeCamera.update(this.renderer, this.scene);
+        // cubeCamera.update(this.renderer, this.scene);
         this.renderer.render(this.scene, this.camera);
     }
 
