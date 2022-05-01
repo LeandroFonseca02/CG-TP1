@@ -5,6 +5,7 @@ import {Banco, Jardim, Tree, Lamp, TrashBin, Model, Playground, Duck} from "./Mo
 import {FirstPersonControls} from "./FirstPersonControls.js";
 import Stats from "./stats.module.js";
 
+// CG
 
 export const loadingManager = new THREE.LoadingManager();
 
