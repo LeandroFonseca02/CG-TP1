@@ -157,7 +157,7 @@ class Stone extends Material{
 }
 
 export class Skybox extends Cube{
-    constructor(size) {
+    constructor(size, position) {
         super(size);
         this.texture = new SkyboxDay();
         this.materialArray = [
@@ -173,6 +173,7 @@ export class Skybox extends Cube{
         }
 
         this.mesh = new THREE.Mesh(this.geometry,this.materialArray);
+        this.mesh.position.set(position.x,position.y,position.z);
     }
     update(){}
     getMesh(){

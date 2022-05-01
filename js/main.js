@@ -18,10 +18,10 @@ class Application {
 
     createScene() {
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-        this.camera.position.z = 186;
-        this.camera.position.x = -25;
-        this.camera.rotation.y = 0.02137894385639278;
+        this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
+        this.camera.position.z = 158;
+        this.camera.position.x = 122;
+        this.camera.rotation.y = 0.7893608001951147;
         this.camera.position.y += 15;
 
         this.renderer = new THREE.WebGLRenderer({antialias: true});
@@ -97,6 +97,7 @@ class Application {
         requestAnimationFrame(() => {
             this.controls.update();
             this.stats.update();
+            // console.log(this.camera.rotation)
             this.render();
         });
 
@@ -130,7 +131,7 @@ class Application {
 
 let app = new Application();
 let objs = [
-    new Skybox({width:1000, height:1000, depth:1000}),
+    new Skybox({width:2000, height:2000, depth:2000},{x:0, y:300, z:0}),
     new Jardim({x:0, y:0, z:0}),
     new Bench({x:0, y:0, z:100}, {x:0, y:Math.PI/2, z:0}),
     new Bench({x:30, y:0, z:100}, {x:0, y:Math.PI/2, z:0}),

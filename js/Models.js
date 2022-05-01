@@ -272,7 +272,7 @@ export class Jardim extends Model{
         let pos_x = this.position.x;
         let pos_y = this.position.y;
         let pos_z = this.position.z;
-        loader.load( './models/lake/lago.glb', function ( gltf ) {
+        loader.load( './models/lake/lago2.glb', function ( gltf ) {
             gltf.scene.traverse(function(child) {
                 if (child.isMesh) {
                     child.receiveShadow = true;
