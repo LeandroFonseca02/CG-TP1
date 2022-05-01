@@ -91,7 +91,7 @@ export class FirstPersonControls{
     }
 
     update(){
-        controls.moveForward(keyForward ? 0.8 : (keyBackward ? -0.8 : 0));
-        controls.moveRight(keyRight ? 0.8 : (keyLeft ? -0.8 : 0));
+        controls.moveForward(keyForward ? 0.4 : (keyBackward ? -0.4 : 0));
+        controls.moveRight(keyRight ? 0.4 : (keyLeft ? -0.4 : 0));
     }
 }
