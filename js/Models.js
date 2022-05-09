@@ -221,6 +221,73 @@ export class Tree extends Model {
 
 }
 
+export class Grass extends Model {
+    constructor(position, rotation,type) {
+        super();
+        this.position = position;
+        this.rotation = rotation;
+        this.type = type;
+        switch (type) {
+            case 1:
+                this.url = './models/bushes/bush-1.glb'
+                break;
+            case 2:
+                this.url = './models/bushes/bush-2.glb'
+                break;
+            case 3:
+                this.url = './models/bushes/bush-3.glb'
+                break;
+            case 4:
+                this.url = './models/bushes/bush-4.glb'
+                break;
+            case 5:
+                this.url = './models/bushes/grass-1.glb'
+                break;
+            case 6:
+                this.url = './models/bushes/grass-2.glb'
+                break;
+            case 7:
+                this.url = './models/bushes/grass-3.glb'
+                break;
+            case 8:
+                this.url = './models/bushes/hedge.glb'
+                break;
+        }
+    }
+
+    load(scene,camera) {
+        let loader = new GLTFLoader(loadingManager);
+        let alpha = 7;
+        let pos_x = this.position.x;
+        let pos_y = this.position.y;
+        let pos_z = this.position.z;
+        let rot_x = this.rotation.x;
+        let rot_y = this.rotation.y;
+        let rot_z = this.rotation.z;
+
+        loader.load(this.url, function (gltf) {
+            gltf.scene.traverse(function(child) {
+                if (child.isMesh) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                }
+            })
+            const model = gltf.scene;
+            scene.add(model);
+            model.scale.set(alpha, alpha, alpha);
+            model.position.set(pos_x,pos_y,pos_z);
+            model.rotation.set(rot_x,rot_y,rot_z);
+        }, undefined, function (error) {
+            console.error(error);
+        });
+
+    }
+    update(){
+    }
+
+}
+
+
 export class TrashBin extends Model {
     constructor(position, rotation) {
         super();

@@ -1,7 +1,7 @@
 import * as THREE from './three.module.js';
 import {OrbitControls} from './OrbitControls.js';
 import {Bench, Skybox} from "./Objects.js";
-import {Banco, Jardim, Tree, Lamp, TrashBin, Model, Playground, Duck} from "./Models.js";
+import {Banco, Jardim, Tree, Lamp, TrashBin, Model, Playground, Duck, Grass} from "./Models.js";
 import {FirstPersonControls} from "./FirstPersonControls.js";
 import Stats from "./stats.module.js";
 
