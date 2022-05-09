@@ -24,7 +24,7 @@ class Application {
         this.camera.rotation.y = 0.7893608001951147;
         this.camera.position.y += 15;
 
-        this.renderer = new THREE.WebGLRenderer({antialias: true});
+        this.renderer = new THREE.WebGLRenderer();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.shadowMap.enabled = true;
         this.renderer.shadowMap.type = THREE.VSMShadowMap;
@@ -63,8 +63,8 @@ class Application {
 
         dirLight.shadow.camera.far = 3500;
         dirLight.shadow.bias = -0.0001;
-        dirLight.shadow.mapSize.width = 1024 * 4;
-        dirLight.shadow.mapSize.height = 1024 * 4;
+        dirLight.shadow.mapSize.width = 1024 ;
+        dirLight.shadow.mapSize.height = 1024 ;
 
         this.scene.add(dirLight);
         this.scene.add(hemiLight);
@@ -90,15 +90,25 @@ class Application {
         this.controls = new FirstPersonControls(this.camera, this.renderer.domElement);
         this.scene.add(this.controls.getObject());
         // this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+        console.log(this.renderer.info)
     }
 
     render() {
-        requestAnimationFrame(() => {
-            this.controls.update();
-            this.stats.update();
-            // console.log(this.camera.rotation)
-            this.render();
-        });
+        setTimeout( function() {
+
+            requestAnimationFrame(() => {
+                this.controls.update();
+                this.stats.update();
+                this.render();
+            });
+
+        }.bind(this), 1000 / 75 );
+
+        // requestAnimationFrame(() => {
+        //     this.controls.update();
+        //     this.stats.update();
+        //     this.render();
+        // });
 
         this.objects.forEach((object) => {
             object.update();
