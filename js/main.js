@@ -37,11 +37,11 @@ class Application {
 
         this.render();
 
-
         // Lights
+        const ambientLight = new THREE.AmbientLight(0xfdffe1, 0.4);
+
         var hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.6);
         hemiLight.position.set(0, 500, 0);
-        this.scene.add(hemiLight);
 
         var dirLight = new THREE.DirectionalLight(0xffffff, 2);
         // const helper = new THREE.CameraHelper( dirLight.shadow.camera );
@@ -50,8 +50,6 @@ class Application {
 
         dirLight.position.multiplyScalar(50);
         dirLight.name = "dirlight";
-
-        this.scene.add(dirLight);
 
         dirLight.castShadow = true;
         dirLight.shadow.mapSize.width = dirLight.shadow.mapSize.height = 1024 * 2;
@@ -68,7 +66,8 @@ class Application {
         dirLight.shadow.mapSize.width = 1024 * 4;
         dirLight.shadow.mapSize.height = 1024 * 4;
 
-        const ambientLight = new THREE.AmbientLight(0xfdffe1, 0.4);
+        this.scene.add(dirLight);
+        this.scene.add(hemiLight);
         this.scene.add(ambientLight)
         // const axesHelper = new THREE.AxesHelper(500);
         // this.scene.add(axesHelper);
@@ -142,15 +141,7 @@ let objs = [
     new Lamp({x:20, y:-2.5, z:120},{x:0, y:0, z:0}),
     new Lamp({x:50, y:-2.5, z:120},{x:0, y:0, z:0}),
     new Playground({x:-100, y:-0.5, z:120},{x:0, y:Math.PI/2, z:0}),
-    // new Duck({x:-30, y:-3, z:-50},{x:0, y:0, z:0}),
-    // new Bench({x:-40, y:3, z:80}, 1.58),
-    // new Bench({x:0, y:3, z:80}, 1.58),
-    // new Bench({x:40, y:3, z:80}, 1.58),
-    // new Bench({x:80, y:3, z:80}, 1.58),
-    // new Tree({x:30, y:0, z:130},{x:0, y:0, z:0},10),
-    // new Tree({x:20, y:0, z:0},{x:0, y:0, z:0},2),
-
-
+    new Duck({x:-30, y:-3, z:-50},{x:0, y:0, z:0}),
 
     new Banco({x:-20, y:4, z:-5},{x:Math.PI, y:Math.PI-Math.PI/6, z:0}),
     new Lamp({x:-35, y:-2.5, z:-1},{x:0, y:0, z:0}),
@@ -171,8 +162,6 @@ let objs = [
     new Lamp({x:-110, y:-2.5, z:10 },{x:0, y:0, z:0}),
     new TrashBin({x:-85, y:0, z:30},{x:Math.PI/2, y:0, z:0}),
 
-
-
     new Tree({x:110, y:0, z:110},{x:0, y:Math.PI/2, z:0},10),
     new Tree({x:180, y:0, z:90},{x:0, y:Math.PI/2, z:0},10),
     new Tree({x:50, y:0, z:30},{x:0, y:Math.PI/2, z:0},10),
@@ -180,14 +169,6 @@ let objs = [
     new Tree({x:180, y:0, z:-180},{x:0, y:Math.PI/2, z:0},10),
     new Tree({x:160, y:0, z:-100},{x:0, y:Math.PI/2, z:0},10),
     new Tree({x:110, y:0, z:-40},{x:0, y:Math.PI/2, z:0},10),
-
-    // new Tree({x:120, y:0, z:150},{x:0, y:Math.PI/2, z:0},10),
-    // new Tree({x:120, y:0, z:90},{x:0, y:Math.PI/2, z:0},10),
-    // new Tree({x:120, y:0, z:30},{x:0, y:Math.PI/2, z:0},10),
-    // new Tree({x:120, y:0, z:-30},{x:0, y:Math.PI/2, z:0},10),
-    // new Tree({x:120, y:0, z:-90},{x:0, y:Math.PI/2, z:0},10),
-    // new Tree({x:120, y:0, z:-150},{x:0, y:Math.PI/2, z:0},10),
-
 
     new Tree({x:-160, y:0, z:-180},{x:0, y:Math.PI/2, z:0},10),
     new Tree({x:-160, y:0, z:-100},{x:0, y:Math.PI/2, z:0},10),
@@ -197,17 +178,15 @@ let objs = [
     new Tree({x:-160, y:0, z:120},{x:0, y:Math.PI/2, z:0},10),
     new Tree({x:-160, y:0, z:60},{x:0, y:Math.PI/2, z:0},10),
 
-
-
     new Tree({x:-120, y:0, z:-150},{x:0, y:Math.PI/2, z:0},10),
     new Tree({x:-60, y:0, z:-130},{x:0, y:Math.PI/2, z:0},10),
     new Tree({x:0, y:0, z:-180},{x:0, y:Math.PI/2, z:0},10),
     new Tree({x:120, y:0, z:-180},{x:0, y:Math.PI/2, z:0},10),
     new Tree({x:60, y:0, z:-110},{x:0, y:Math.PI/2, z:0},10),
 
-    new Tree({x:120, y:0, z:180},{x:0, y:Math.PI/2, z:0},10),
-    new Tree({x:60, y:0, z:180},{x:0, y:Math.PI/2, z:0},10),
-    new Tree({x:0, y:0, z:180},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:120, y:0, z:160},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:60, y:0, z:160},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:0, y:0, z:160},{x:0, y:Math.PI/2, z:0},10),
     new Tree({x:-120, y:0, z:160},{x:0, y:Math.PI/2, z:0},10),
     new Tree({x:-60, y:0, z:140},{x:0, y:Math.PI/2, z:0},10),
 
@@ -215,15 +194,6 @@ let objs = [
     new Tree({x:-180, y:0, z:0},{x:0, y:Math.PI/2, z:0},10),
     new Tree({x:180, y:0, z:0},{x:0, y:Math.PI/2, z:0},10),
     new Tree({x:110, y:0, z:40},{x:0, y:Math.PI/2, z:0},10),
-
-
-
-
-
-
-
-
-
 ];
 
 app.add(objs);
