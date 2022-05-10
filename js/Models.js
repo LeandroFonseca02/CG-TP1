@@ -9,6 +9,7 @@ export class Model{
     load(){}
 }
 
+// classe que define os candeeiros do nosso cenário
 export class Lamp extends Model {
     constructor(position, rotation) {
         super();
@@ -48,6 +49,7 @@ export class Lamp extends Model {
 
 }
 
+// classe que define os patos do nosso cenário
 export class Duck extends Model {
     constructor(position, rotation, haveSound) {
         super();
@@ -101,6 +103,7 @@ export class Duck extends Model {
 
 }
 
+// classe que define as diversões do nosso cenário
 export class Playground extends Model {
     constructor(position, rotation) {
         super();
@@ -143,6 +146,7 @@ export class Playground extends Model {
 
 }
 
+// classe que define os árvores do nosso cenário
 export class Tree extends Model {
     constructor(position, rotation, scale) {
         super();
@@ -189,6 +193,7 @@ export class Tree extends Model {
 
 }
 
+// classe que define os caixotes do lixo do nosso cenário
 export class TrashBin extends Model {
     constructor(position, rotation) {
         super();
@@ -228,6 +233,7 @@ export class TrashBin extends Model {
     }
 }
 
+// classe que define o parque do nosso cenário
 export class Jardim extends Model{
     constructor(position) {
         super();
@@ -287,6 +293,7 @@ export class Jardim extends Model{
     }
 }
 
+// classe que define os bancos de jardim do nosso cenário
 export class Banco extends Model {
     constructor(position, rotation) {
         super();

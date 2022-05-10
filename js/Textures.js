@@ -5,6 +5,7 @@ class Obj {
     constructor(){}
 }
 
+// classe que define as texturas dos nossos objetos
 class Material extends Obj{
     constructor(baseTexture, normalTexture, heightTexture, roughnessTexture, aoTexture, metallicTexture) {
         super();
@@ -36,6 +37,7 @@ class Material extends Obj{
     }
 }
 
+// classe que define as texturas da Skybox
 class SkyboxMaterial extends Obj{
     constructor(textureBK, textureDN, textureFT, textureLF, textureRT, textureUP) {
         super();
@@ -68,6 +70,7 @@ class SkyboxMaterial extends Obj{
     }
 }
 
+// classe que define a repetição das texturas dos nossos objetos
 export class Wrap extends Obj{
     constructor(material, repA, repB) {
         super();
@@ -82,6 +85,7 @@ export class Wrap extends Obj{
     }
 }
 
+// classes que define as imagens das texturas dos nossos objetos
 export class SkyboxDay extends SkyboxMaterial{
     constructor() {
         super('./textures/Skybox/miramar_bk.jpg','./textures/Skybox/miramar_dn.jpg',

@@ -8,6 +8,7 @@ class Obj {
     constructor(){}
 }
 
+// classe que permite a um objeto ter a geometria de um cubo
 class Cube extends Obj{
     constructor(size) {
         super();
@@ -15,6 +16,7 @@ class Cube extends Obj{
     }
 }
 
+// classe que permite a um objeto ter a geometria de um cubo com vertices redondos
 class RoundCube extends Obj{
     constructor(size) {
         super();
@@ -22,6 +24,7 @@ class RoundCube extends Obj{
     }
 }
 
+// classe que permite a um objeto ter a geometria de um cilíndro
 class Cylinder extends Obj{
     constructor(radiusTop, radiusBottom, height, RadialS) {
         super();
@@ -29,6 +32,7 @@ class Cylinder extends Obj{
     }
 }
 
+// classe que permite a um objeto ter a geometria de uma esfera
 class Sphere extends Obj{
     constructor(radius, widthSegments, heightSegments, phiS, phiL) {
         super();
@@ -36,7 +40,7 @@ class Sphere extends Obj{
     }
 }
 
-
+// classe que define a Skybox
 export class Skybox extends Cube{
     constructor(size, position) {
         super(size);
@@ -62,6 +66,7 @@ export class Skybox extends Cube{
     }
 }
 
+// classe que define o suporte de metal do nosso objeto hierárquico
 class Suporte extends Cube {
     constructor(size,position, rotateX, rotateZ, repA, repB, material) {
         super(size);
@@ -103,6 +108,7 @@ class Suporte extends Cube {
     getMesh() { return this.mesh; }
 }
 
+// classe que define o tampo e os assentos de madeira do nosso objeto hierárquico
 class WoodBar extends RoundCube {
     constructor(size,position, rotate, rotateZ, repA, repB, material) {
         super(size);
@@ -145,6 +151,7 @@ class WoodBar extends RoundCube {
     }
 }
 
+// classe que define as pernas de metal do nosso objeto hierárquico
 class Legs extends Cylinder {
     constructor(position, radiusTop, radiusBottom, height, RadialS, rotateX, rotateY, material) {
         super(radiusTop, radiusBottom, height, RadialS);
@@ -174,6 +181,7 @@ class Legs extends Cylinder {
         return this.mesh;
     }}
 
+// classe que define a base de pedra do nosso objeto hierárquico
 class Base extends RoundCube{
     constructor(size,position, rotateX, rotateZ, repA, repB, material) {
         super(size);
@@ -214,6 +222,7 @@ class Base extends RoundCube{
     }
 }
 
+// classe que define um parafuso de metal do nosso objeto hierárquico
 class Screw extends Sphere {
     constructor(position, radius, widthSegments, heightSegments, theta, material) {
         super(radius, widthSegments, heightSegments, theta);
@@ -245,6 +254,7 @@ class Screw extends Sphere {
     }
 }
 
+// classe que define o nosso objeto hierárquico
 export class Bench extends Obj{
     constructor(position, rotation) {
         super();
@@ -306,6 +316,7 @@ export class Bench extends Obj{
         // this.mesh.rotation.y += 0.01;
     }
 
+    // classe que cria a textura de metal refletivo a ser usado nos objetos
     createReflectiveMetalMat(){
         let texture = new ReflectiveMetal();
         let material = new THREE.MeshStandardMaterial({
@@ -321,6 +332,7 @@ export class Bench extends Obj{
         return material;
     }
 
+    // classe que cria a textura de metal enferrujado a ser usado nos objetos
     createRustyMetalMat(){
         let texture = new RustyMetal();
         let material = new THREE.MeshStandardMaterial({
@@ -354,6 +366,7 @@ export class Bench extends Obj{
         return material;
     }
 
+    // classe que cria a textura de pedra a ser usado nos objetos
     createStoneMat(){
         let texture = new Stone();
         let maps = [
@@ -374,6 +387,7 @@ export class Bench extends Obj{
         return material;
     }
 
+    // classe que cria a textura de madeira a ser usado nos objetos
     createWoodMat(repA,repB){
         let texture = new Wood();
         let maps = [
