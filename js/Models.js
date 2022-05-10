@@ -144,10 +144,11 @@ export class Playground extends Model {
 }
 
 export class Tree extends Model {
-    constructor(position, rotation) {
+    constructor(position, rotation, scale) {
         super();
         this.position = position;
         this.rotation = rotation;
+        this.scale = scale;
     }
 
     load(scene,camera) {
@@ -159,6 +160,10 @@ export class Tree extends Model {
         let rot_x = this.rotation.x;
         let rot_y = this.rotation.y;
         let rot_z = this.rotation.z;
+
+        if(this.scale > 0){
+            alpha = 0.5*this.scale;
+        }
 
         loader.load('./models/tree/tree.glb', function (gltf) {
             gltf.scene.traverse(function(child) {
