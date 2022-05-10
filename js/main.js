@@ -93,32 +93,13 @@ class Application {
     }
 
     render() {
-        let clock = new THREE.Clock();
-        let delta = 0;
-        let interval = 1 / 30;
 
         requestAnimationFrame(() => {
             this.controls.update();
             this.stats.update();
             this.render();
         });
-        delta += clock.getDelta();
 
-            if (delta  > interval) {
-                requestAnimationFrame(() => {
-                    this.controls.update();
-                    this.stats.update();
-                    this.render();
-                });
-
-                delta = delta % interval;
-            }
-
-        // requestAnimationFrame(() => {
-        //     // this.controls.update();
-        //     // this.stats.update();
-        //     // this.render();
-        // });
 
         this.objects.forEach((object) => {
             object.update();
