@@ -1,7 +1,7 @@
 import * as THREE from './three.module.js';
 import {OrbitControls} from './OrbitControls.js';
 import {Bench, Skybox} from "./Objects.js";
-import {Banco, Jardim, Tree, Lamp, TrashBin, Model, Playground, Duck, Grass} from "./Models.js";
+import {Banco, Jardim, Tree, Lamp, TrashBin, Model, Playground, Duck, Grass, Arvore} from "./Models.js";
 import {FirstPersonControls} from "./FirstPersonControls.js";
 import Stats from "./stats.module.js";
 
@@ -90,16 +90,35 @@ class Application {
         this.controls = new FirstPersonControls(this.camera, this.renderer.domElement);
         this.scene.add(this.controls.getObject());
         // this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-        console.log(this.renderer.info)
     }
 
     render() {
+        let clock = new THREE.Clock();
+        let delta = 0;
+        let interval = 1 / 30;
 
         requestAnimationFrame(() => {
             this.controls.update();
             this.stats.update();
             this.render();
         });
+        delta += clock.getDelta();
+
+            if (delta  > interval) {
+                requestAnimationFrame(() => {
+                    this.controls.update();
+                    this.stats.update();
+                    this.render();
+                });
+
+                delta = delta % interval;
+            }
+
+        // requestAnimationFrame(() => {
+        //     // this.controls.update();
+        //     // this.stats.update();
+        //     // this.render();
+        // });
 
         this.objects.forEach((object) => {
             object.update();
@@ -195,6 +214,8 @@ let objs = [
     // new Tree({x:-180, y:0, z:0},{x:0, y:Math.PI/2, z:0},10),
     // new Tree({x:180, y:0, z:0},{x:0, y:Math.PI/2, z:0},10),
     // new Tree({x:110, y:0, z:40},{x:0, y:Math.PI/2, z:0},10),
+    new Arvore({x:0, y:0, z:0},{x:0, y:0, z:0}),
+
 ];
 
 app.add(objs);

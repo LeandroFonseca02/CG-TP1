@@ -287,6 +287,48 @@ export class Grass extends Model {
 
 }
 
+export class Arvore extends Model {
+    constructor(position, rotation) {
+        super();
+        this.position = position;
+        this.rotation = rotation;
+    }
+
+    load(scene,camera) {
+        let loader = new GLTFLoader(loadingManager);
+        let alpha = 10;
+        let pos_x = this.position.x;
+        let pos_y = this.position.y;
+        let pos_z = this.position.z;
+        let rot_x = this.rotation.x;
+        let rot_y = this.rotation.y;
+        let rot_z = this.rotation.z;
+
+        loader.load('./models/trees/tree.glb', function (gltf) {
+            gltf.scene.traverse(function(child) {
+                if (child.isMesh) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                }
+            })
+            const model = gltf.scene;
+            model.children[0].children[0].material.metalness = 0.3;
+            model.children[0].children[1].material.metalness = 0.3;
+
+            // model.material.metalness = 0
+            scene.add(model);
+            model.scale.set(alpha, alpha, alpha);
+            model.position.set(pos_x,pos_y,pos_z);
+            model.rotation.set(rot_x,rot_y,rot_z);
+        }, undefined, function (error) {
+            console.error(error);
+        });
+
+    }
+    update(){
+    }
+}
+
 
 export class TrashBin extends Model {
     constructor(position, rotation) {
