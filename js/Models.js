@@ -79,7 +79,7 @@ export class Duck extends Model {
             model.scale.set(alpha, alpha, alpha);
             model.position.set(this.position.x,this.position.y,this.position.z);
             model.rotation.set(this.rotation.x,this.rotation.y,this.rotation.z);
-            if(this.haveSound !== 0){
+            if(this.haveSound === 1){
                 const listener = new THREE.AudioListener();
                 camera.add( listener );
                 const sound = new THREE.PositionalAudio( listener );
