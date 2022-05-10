@@ -178,7 +178,7 @@ export class Tree extends Model {
                 this.url = './models/trees/tree3-2.glb'
                 break;
             case 10:
-                this.url = './models/trees/tree4.glb'
+                this.url = './models/trees/tree.glb'
                 break;
             case 11:
                 this.url = './models/trees/tree4-1.glb'
@@ -191,7 +191,7 @@ export class Tree extends Model {
 
     load(scene,camera) {
         let loader = new GLTFLoader(loadingManager);
-        let alpha = 7;
+        let alpha = 0.5;
         let pos_x = this.position.x;
         let pos_y = this.position.y;
         let pos_z = this.position.z;
@@ -207,6 +207,8 @@ export class Tree extends Model {
                 }
             })
             const model = gltf.scene;
+            model.children[0].children[0].material.metalness = 0.3;
+            model.children[0].children[1].material.metalness = 0.3;
             scene.add(model);
             model.scale.set(alpha, alpha, alpha);
             model.position.set(pos_x,pos_y,pos_z);
@@ -296,7 +298,7 @@ export class Arvore extends Model {
 
     load(scene,camera) {
         let loader = new GLTFLoader(loadingManager);
-        let alpha = 10;
+        let alpha = 0.5;
         let pos_x = this.position.x;
         let pos_y = this.position.y;
         let pos_z = this.position.z;

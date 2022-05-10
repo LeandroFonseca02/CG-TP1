@@ -24,7 +24,7 @@ class Application {
         this.camera.rotation.y = 0.7893608001951147;
         this.camera.position.y += 15;
 
-        this.renderer = new THREE.WebGLRenderer();
+        this.renderer = new THREE.WebGLRenderer({antialias:true});
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.shadowMap.enabled = true;
         this.renderer.shadowMap.type = THREE.VSMShadowMap;
@@ -163,39 +163,39 @@ let objs = [
     new Lamp({x:-110, y:-2.5, z:10 },{x:0, y:0, z:0}),
     new TrashBin({x:-85, y:0, z:30},{x:Math.PI/2, y:0, z:0}),
 
-    // new Tree({x:110, y:0, z:110},{x:0, y:Math.PI/2, z:0},10),
-    // new Tree({x:180, y:0, z:90},{x:0, y:Math.PI/2, z:0},10),
-    // new Tree({x:50, y:0, z:30},{x:0, y:Math.PI/2, z:0},10),
-    // new Tree({x:0, y:0, z:0},{x:0, y:Math.PI/2, z:0},10),
-    // new Tree({x:180, y:0, z:-180},{x:0, y:Math.PI/2, z:0},10),
-    // new Tree({x:160, y:0, z:-100},{x:0, y:Math.PI/2, z:0},10),
-    // new Tree({x:110, y:0, z:-40},{x:0, y:Math.PI/2, z:0},10),
-    //
-    // new Tree({x:-160, y:0, z:-180},{x:0, y:Math.PI/2, z:0},10),
-    // new Tree({x:-160, y:0, z:-100},{x:0, y:Math.PI/2, z:0},10),
-    // new Tree({x:-130, y:0, z:-60},{x:0, y:Math.PI/2, z:0},10),
-    // new Tree({x:-130, y:0, z:0},{x:0, y:Math.PI/2, z:0},10),
-    // new Tree({x:-160, y:0, z:180},{x:0, y:Math.PI/2, z:0},10),
-    // new Tree({x:-160, y:0, z:120},{x:0, y:Math.PI/2, z:0},10),
-    // new Tree({x:-160, y:0, z:60},{x:0, y:Math.PI/2, z:0},10),
-    //
-    // new Tree({x:-120, y:0, z:-150},{x:0, y:Math.PI/2, z:0},10),
-    // new Tree({x:-60, y:0, z:-130},{x:0, y:Math.PI/2, z:0},10),
-    // new Tree({x:0, y:0, z:-180},{x:0, y:Math.PI/2, z:0},10),
-    // new Tree({x:120, y:0, z:-180},{x:0, y:Math.PI/2, z:0},10),
-    // new Tree({x:60, y:0, z:-110},{x:0, y:Math.PI/2, z:0},10),
-    //
-    // new Tree({x:120, y:0, z:160},{x:0, y:Math.PI/2, z:0},10),
-    // new Tree({x:60, y:0, z:160},{x:0, y:Math.PI/2, z:0},10),
-    // new Tree({x:0, y:0, z:160},{x:0, y:Math.PI/2, z:0},10),
-    // new Tree({x:-120, y:0, z:160},{x:0, y:Math.PI/2, z:0},10),
-    // new Tree({x:-60, y:0, z:140},{x:0, y:Math.PI/2, z:0},10),
-    //
-    // new Tree({x:-50, y:0, z:50},{x:0, y:Math.PI/2, z:0},10),
-    // new Tree({x:-180, y:0, z:0},{x:0, y:Math.PI/2, z:0},10),
-    // new Tree({x:180, y:0, z:0},{x:0, y:Math.PI/2, z:0},10),
-    // new Tree({x:110, y:0, z:40},{x:0, y:Math.PI/2, z:0},10),
-    new Arvore({x:0, y:0, z:0},{x:0, y:0, z:0}),
+    new Tree({x:110, y:0, z:110},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:180, y:0, z:90},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:50, y:0, z:30},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:0, y:0, z:0},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:180, y:0, z:-180},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:160, y:0, z:-100},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:110, y:0, z:-40},{x:0, y:Math.PI/2, z:0},10),
+
+    new Tree({x:-160, y:0, z:-180},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:-160, y:0, z:-100},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:-130, y:0, z:-60},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:-130, y:0, z:0},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:-160, y:0, z:180},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:-160, y:0, z:120},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:-160, y:0, z:60},{x:0, y:Math.PI/2, z:0},10),
+
+    new Tree({x:-120, y:0, z:-150},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:-60, y:0, z:-130},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:0, y:0, z:-180},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:120, y:0, z:-180},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:60, y:0, z:-110},{x:0, y:Math.PI/2, z:0},10),
+
+    new Tree({x:120, y:0, z:160},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:60, y:0, z:160},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:0, y:0, z:160},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:-120, y:0, z:160},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:-60, y:0, z:140},{x:0, y:Math.PI/2, z:0},10),
+
+    new Tree({x:-50, y:0, z:50},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:-180, y:0, z:0},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:180, y:0, z:0},{x:0, y:Math.PI/2, z:0},10),
+    new Tree({x:110, y:0, z:40},{x:0, y:Math.PI/2, z:0},10),
+    // new Arvore({x:0, y:0, z:0},{x:0, y:0, z:0}),
 
 ];
 
