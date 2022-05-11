@@ -1,6 +1,6 @@
 import * as THREE from "./three.module.js";
 import {RoundedBoxGeometry} from "./RoundedBoxGeometry.js";
-import {MeshStandardMaterial, TextureLoader} from "./three.module.js";
+import {MeshStandardMaterial} from "./three.module.js";
 import {SkyboxDay, RustyMetal, ReflectiveMetal, Stone, Wrap, Wood} from "./Textures.js";
 
 

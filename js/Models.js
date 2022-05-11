@@ -1,7 +1,7 @@
 import {GLTFLoader} from "./GLTFLoader.js";
 import * as THREE from "./three.module.js";
 import {Water} from "./Water2.js";
-import {Vector2, Vector3} from "./three.module.js";
+import {Vector2} from "./three.module.js";
 import { loadingManager } from './main.js';
 
 export class ModelAudio{
