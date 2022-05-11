@@ -1,31 +1,26 @@
 import {GLTFLoader} from "./GLTFLoader.js";
 import * as THREE from "./three.module.js";
 import {Water} from "./Water2.js";
-import {Vector2} from "./three.module.js";
+import {Vector2, Vector3} from "./three.module.js";
 import { loadingManager } from './main.js';
 
-export class Model{
+export class ModelAudio{
     constructor(){}
-    load(){}
+    addSound(){}
 }
 
 // classe que define os candeeiros do nosso cenário
-export class Lamp extends Model {
+export class Lamp {
     constructor(position, rotation) {
-        super();
-        this.position = position;
-        this.rotation = rotation;
+        this.mesh = this.load();
+        this.mesh.position.set(position.x,position.y,position.z);
+        this.mesh.rotation.set(rotation.x,rotation.y,rotation.z);
+        this.mesh.scale.set(0.08,0.08,0.08);
     }
 
-    load(scene,camera) {
+    load() {
         let loader = new GLTFLoader(loadingManager);
-        let alpha = 0.08;
-        let pos_x = this.position.x;
-        let pos_y = this.position.y;
-        let pos_z = this.position.z;
-        let rot_x = this.rotation.x;
-        let rot_y = this.rotation.y;
-        let rot_z = this.rotation.z;
+        let mesh = new THREE.Mesh();
 
         loader.load('./models/lamp/lamp.glb', function (gltf) {
             gltf.scene.traverse(function(child) {
@@ -35,36 +30,38 @@ export class Lamp extends Model {
                 }
             })
             const model = gltf.scene.children[0];
-            scene.add(model);
-            model.scale.set(alpha, alpha, alpha);
-            model.position.set(pos_x,pos_y,pos_z);
-            model.rotation.set(rot_x,rot_y,rot_z);
+            model.position.set(0,0,0);
+            model.rotation.set(0,0,0);
+            model.scale.set(1,1,1);
+            mesh.add(model);
         }, undefined, function (error) {
             console.error(error);
         });
-
+        return mesh;
     }
     update(){
     }
 
+    getMesh(){return this.mesh;}
+
 }
 
 // classe que define os patos do nosso cenário
-export class Duck extends Model {
+export class Duck extends ModelAudio {
     constructor(position, rotation, haveSound) {
         super();
-        this.position = position;
-        this.rotation = rotation;
+        this.mesh = this.load();
+        this.mesh.position.set(position.x,position.y,position.z);
+        this.mesh.rotation.set(rotation.x,rotation.y,rotation.z);
+        this.mesh.scale.set(10,10,10);
         this.haveSound = 0;
         this.haveSound = haveSound;
-
     }
 
 
-    load(scene,camera){
+    load(){
         let loader = new GLTFLoader(loadingManager);
-        let alpha = 10;
-        let model;
+        let mesh = new THREE.Mesh();
 
         loader.load('./models/duck/duck.glb', function (gltf) {
             gltf.scene.traverse(function(child) {
@@ -73,53 +70,54 @@ export class Duck extends Model {
                     child.receiveShadow = true;
                 }
             })
-            model = gltf.scene;
+            let model = gltf.scene;
 
-            scene.add(model);
-            model.scale.set(alpha, alpha, alpha);
-            model.position.set(this.position.x,this.position.y,this.position.z);
-            model.rotation.set(this.rotation.x,this.rotation.y,this.rotation.z);
-            if(this.haveSound === 1){
-                const listener = new THREE.AudioListener();
-                camera.add( listener );
-                const sound = new THREE.PositionalAudio( listener );
-                const audioLoader = new THREE.AudioLoader();
-                audioLoader.load( './sounds/duck.mp3', function( buffer ) {
-                    sound.setBuffer( buffer );
-                    sound.setRefDistance(7);
-                    sound.setMaxDistance(0.1);
-                    sound.play(1);
-                    model.add(sound);
-                }.bind(model));
-            }
-        }.bind(this), undefined, function (error) {
+            mesh.add(model);
+            model.position.set(0,0,0);
+            model.rotation.set(0,0,0);
+            model.scale.set(1,1,1);
+        }, undefined, function (error) {
             console.error(error);
         });
+        return mesh;
+    }
 
+    addSound(camera){
+        if(this.haveSound === 1){
+            const listener = new THREE.AudioListener();
+            camera.add( listener );
+            const sound = new THREE.PositionalAudio( listener );
+            const audioLoader = new THREE.AudioLoader();
+            const mesh = this.getMesh();
+            audioLoader.load( './sounds/duck.mp3', function( buffer ) {
+                sound.setBuffer( buffer );
+                sound.setRefDistance(7);
+                sound.setMaxDistance(0.1);
+                sound.play(1);
+                mesh.add(sound);
+            }.bind(this.mesh));
+        }
     }
 
     update(){
     }
 
+    getMesh(){return this.mesh;}
+
 }
 
 // classe que define as diversões do nosso cenário
-export class Playground extends Model {
+export class Playground {
     constructor(position, rotation) {
-        super();
-        this.position = position;
-        this.rotation = rotation;
+        this.mesh = this.load();
+        this.mesh.position.set(position.x,position.y,position.z);
+        this.mesh.rotation.set(rotation.x,rotation.y,rotation.z);
+        this.mesh.scale.set(10,10,10);
     }
 
-    load(scene,camera) {
+    load() {
         let loader = new GLTFLoader(loadingManager);
-        let alpha = 10;
-        let pos_x = this.position.x;
-        let pos_y = this.position.y;
-        let pos_z = this.position.z;
-        let rot_x = this.rotation.x;
-        let rot_y = this.rotation.y;
-        let rot_z = this.rotation.z;
+        let mesh = new THREE.Mesh();
 
         loader.load('./models/playground/playground.glb', function (gltf) {
             gltf.scene.traverse(function(child) {
@@ -129,45 +127,43 @@ export class Playground extends Model {
                 }
             })
             const model = gltf.scene.children[0];
-            scene.add(model);
             for (let i = 0; i < 6; i++) {
                 model.children[i].material.metalness = 0.5;
             }
-            model.scale.set(alpha, alpha, alpha);
-            model.position.set(pos_x,pos_y,pos_z);
-            model.rotation.set(rot_x,rot_y,rot_z);
+
+            model.position.set(0,0,0);
+            model.rotation.set(0,0,0);
+            model.scale.set(1,1,1);
+            mesh.add(model)
         }, undefined, function (error) {
             console.error(error);
         });
-
+        return mesh;
     }
     update(){
     }
 
+    getMesh(){return this.mesh;}
+
 }
 
 // classe que define os árvores do nosso cenário
-export class Tree extends Model {
+export class Tree {
     constructor(position, rotation, scale) {
-        super();
-        this.position = position;
-        this.rotation = rotation;
-        this.scale = scale;
+        this.mesh = this.load();
+        this.mesh.position.set(position.x,position.y,position.z);
+        this.mesh.rotation.set(rotation.x,rotation.y,rotation.z);
+        if(scale > 0){
+            this.mesh.scale.set(  0.5*scale,0.5*scale,0.5*scale);
+        }else{
+            this.mesh.scale.set(0.5,0.5,0.5);
+        }
+
     }
 
-    load(scene,camera) {
+    load() {
         let loader = new GLTFLoader(loadingManager);
-        let alpha = 0.5;
-        let pos_x = this.position.x;
-        let pos_y = this.position.y;
-        let pos_z = this.position.z;
-        let rot_x = this.rotation.x;
-        let rot_y = this.rotation.y;
-        let rot_z = this.rotation.z;
-
-        if(this.scale > 0){
-            alpha = 0.5*this.scale;
-        }
+        let mesh = new THREE.Mesh();
 
         loader.load('./models/tree/tree.glb', function (gltf) {
             gltf.scene.traverse(function(child) {
@@ -179,37 +175,34 @@ export class Tree extends Model {
             const model = gltf.scene;
             model.children[0].children[0].material.metalness = 0.3;
             model.children[0].children[1].material.metalness = 0.3;
-            scene.add(model);
-            model.scale.set(alpha, alpha, alpha);
-            model.position.set(pos_x,pos_y,pos_z);
-            model.rotation.set(rot_x,rot_y,rot_z);
+            model.position.set(0,0,0);
+            model.rotation.set(0,0,0);
+            model.scale.set(1,1,1);
+            mesh.add(model);
         }, undefined, function (error) {
             console.error(error);
         });
-
+        return mesh
     }
     update(){
     }
 
+    getMesh(){return this.mesh;}
+
 }
 
 // classe que define os caixotes do lixo do nosso cenário
-export class TrashBin extends Model {
+export class TrashBin {
     constructor(position, rotation) {
-        super();
-        this.position = position;
-        this.rotation = rotation;
+        this.mesh = this.load();
+        this.mesh.position.set(position.x,position.y,position.z);
+        this.mesh.rotation.set(rotation.x,rotation.y,rotation.z);
+        this.mesh.scale.set(0.08,0.08,0.08);
     }
 
-    load(scene,camera) {
+    load() {
         let loader = new GLTFLoader(loadingManager);
-        let alpha = 0.08;
-        let pos_x = this.position.x;
-        let pos_y = this.position.y;
-        let pos_z = this.position.z;
-        let rot_x = this.rotation.x;
-        let rot_y = this.rotation.y;
-        let rot_z = this.rotation.z;
+        let mesh = new THREE.Mesh();
 
         loader.load('./models/trash/trash.glb', function (gltf) {
             gltf.scene.traverse(function(child) {
@@ -219,33 +212,34 @@ export class TrashBin extends Model {
                 }
             })
             const model = gltf.scene.children[0];
-            model.material.metalness = 0
-            scene.add(model);
-            model.scale.set(alpha, alpha, alpha);
-            model.position.set(pos_x,pos_y,pos_z);
-            model.rotation.set(rot_x,rot_y,rot_z);
+            model.material.metalness = 0;
+            model.position.set(0,0,0);
+            model.rotation.set(0,0,0);
+            model.scale.set(1,1,1);
+            mesh.add(model);
         }, undefined, function (error) {
             console.error(error);
         });
-
+        return mesh;
     }
+
     update(){
     }
+
+    getMesh(){return this.mesh;}
+
 }
 
 // classe que define o parque do nosso cenário
-export class Jardim extends Model{
+export class Jardim {
     constructor(position) {
-        super();
-        this.position = position;
+        this.mesh = this.load();
+        this.mesh.position.set(position.x,position.y,position.z);
     }
-    load(scene,camera){
+    load(){
         let loader = new GLTFLoader(loadingManager);
-        let alpha = 200;
+        let mesh = new THREE.Group();
         let grass_alpha = 30;
-        let pos_x = this.position.x;
-        let pos_y = this.position.y;
-        let pos_z = this.position.z;
         loader.load( './models/lake/lago-muro.glb', function ( gltf ) {
             gltf.scene.traverse(function(child) {
                 if (child.isMesh) {
@@ -261,9 +255,10 @@ export class Jardim extends Model{
             model.children[1].material.metalnessMap.repeat = new Vector2(grass_alpha,grass_alpha)
             model.children[1].material.normalMap.repeat = new Vector2(grass_alpha,grass_alpha)
             model.children[1].material.roughnessMap.repeat = new Vector2(grass_alpha,grass_alpha)
-            scene.add(model)
-            model.scale.set(alpha, alpha, alpha)
-            model.position.set(pos_x,pos_y,pos_z);
+            model.position.set(0,0,0);
+            model.rotation.set(0,0,0);
+            model.scale.set(200,200,200);
+            mesh.add(model);
         }, undefined, function ( error ) {
             console.error( error );
         } );
@@ -287,30 +282,29 @@ export class Jardim extends Model{
 
         water.position.set(-40,-2,-50)
         water.rotation.x = Math.PI * - 0.5;
-        scene.add(water)
+        mesh.add(water);
+        return mesh;
     }
+
     update(){
     }
+
+    getMesh(){return this.mesh;}
+
 }
 
 // classe que define os bancos de jardim do nosso cenário
-export class Banco extends Model {
+export class Banco {
     constructor(position, rotation) {
-        super();
-        this.position = position;
-        this.rotation = rotation;
+        this.mesh = this.load();
+        this.mesh.position.set(position.x,position.y,position.z);
+        this.mesh.rotation.set(rotation.x,rotation.y,rotation.z);
+        this.mesh.scale.set(10,10,10);
     }
 
-    load(scene,camera) {
+    load() {
         let loader = new GLTFLoader(loadingManager);
-        let alpha = 10;
-        let pos_x = this.position.x;
-        let pos_y = this.position.y;
-        let pos_z = this.position.z;
-        let rot_x = this.rotation.x;
-        let rot_y = this.rotation.y;
-        let rot_z = this.rotation.z;
-        let model;
+        let mesh = new THREE.Mesh();
 
         loader.load('./models/bench/bench.glb', function (gltf) {
             gltf.scene.traverse(function(child) {
@@ -319,17 +313,20 @@ export class Banco extends Model {
                     child.receiveShadow = true;
                 }
             })
-            model = gltf.scene.children[0];
-            scene.add(model);
-            model.scale.set(alpha, alpha, alpha);
-            model.position.set(pos_x,pos_y,pos_z);
-            model.rotation.set(rot_x,rot_y,rot_z);
+            let model = gltf.scene.children[0];
+            model.position.set(0,0,0);
+            model.rotation.set(0,0,0);
+            model.scale.set(1,1,1);
+            mesh.add(model);
         }, undefined, function (error) {
             console.error(error);
         });
-
+        return mesh;
     }
+
     update(){
     }
+
+    getMesh(){return this.mesh;}
 
 }
